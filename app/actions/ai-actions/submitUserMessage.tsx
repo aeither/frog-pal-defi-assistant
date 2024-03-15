@@ -1,102 +1,39 @@
 import 'server-only';
 
-import { createAI, createStreamableUI, getMutableAIState } from 'ai/rsc';
-import OpenAI from 'openai';
-
+import { Confetti } from '@/components/confetti';
+import { AddRecipientComponent } from '@/components/contact-list/AddRecipientComponent';
+import { ConfettiButton } from '@/components/dynamic-buttons/confetti-button';
+import { SendCoinConfirm } from '@/components/dynamic-buttons/send-coin-confirm';
 import {
-  spinner,
   BotCard,
   BotMessage,
-  SystemMessage,
-  Stock,
-  Purchase,
-  Stocks,
   Events,
+  Purchase,
+  Stock,
+  Stocks,
+  spinner,
 } from '@/components/llm-stocks';
-
-import {
-  runAsyncFnWithoutBlocking,
-  sleep,
-  formatNumber,
-  runOpenAICompletion,
-} from '@/lib/utils';
-import { z } from 'zod';
-import { StockSkeleton } from '@/components/llm-stocks/stock-skeleton';
 import { EventsSkeleton } from '@/components/llm-stocks/events-skeleton';
+import { StockSkeleton } from '@/components/llm-stocks/stock-skeleton';
 import { StocksSkeleton } from '@/components/llm-stocks/stocks-skeleton';
+import { env } from '@/env';
+import { runOpenAICompletion, sleep } from '@/lib/utils';
+import { createStreamableUI, getMutableAIState } from 'ai/rsc';
+import OpenAI from 'openai';
+import { z } from 'zod';
+import { AI } from '../ai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '',
-});
-
-async function confirmPurchase(symbol: string, price: number, amount: number) {
-  'use server';
-
-  const aiState = getMutableAIState<typeof AI>();
-
-  const purchasing = createStreamableUI(
-    <div className="inline-flex items-start gap-1 md:items-center">
-      {spinner}
-      <p className="mb-2">
-        Purchasing {amount} ${symbol}...
-      </p>
-    </div>,
-  );
-
-  const systemMessage = createStreamableUI(null);
-
-  runAsyncFnWithoutBlocking(async () => {
-    // You can update the UI at any point.
-    await sleep(1000);
-
-    purchasing.update(
-      <div className="inline-flex items-start gap-1 md:items-center">
-        {spinner}
-        <p className="mb-2">
-          Purchasing {amount} ${symbol}... working on it...
-        </p>
-      </div>,
-    );
-
-    await sleep(1000);
-
-    purchasing.done(
-      <div>
-        <p className="mb-2">
-          You have successfully purchased {amount} ${symbol}. Total cost:{' '}
-          {formatNumber(amount * price)}
-        </p>
-      </div>,
-    );
-
-    systemMessage.done(
-      <SystemMessage>
-        You have purchased {amount} shares of {symbol} at ${price}. Total cost ={' '}
-        {formatNumber(amount * price)}.
-      </SystemMessage>,
-    );
-
-    aiState.done([
-      ...aiState.get(),
-      {
-        role: 'system',
-        content: `[User has purchased ${amount} shares of ${symbol} at ${price}. Total cost = ${
-          amount * price
-        }]`,
-      },
-    ]);
-  });
-
-  return {
-    purchasingUI: purchasing.value,
-    newMessage: {
-      id: Date.now(),
-      display: systemMessage.value,
-    },
+interface CoinGeckoResponse {
+  [key: string]: {
+    usd: number;
   };
 }
 
-async function submitUserMessage(content: string) {
+const openai = new OpenAI({
+  apiKey: env.OPENAI_API_KEY,
+});
+
+export async function submitUserMessage(content: string) {
   'use server';
 
   const aiState = getMutableAIState<typeof AI>();
@@ -109,23 +46,28 @@ async function submitUserMessage(content: string) {
   ]);
 
   const reply = createStreamableUI(
-    <BotMessage className="items-center">{spinner}</BotMessage>,
+    <BotMessage className='items-center'>{spinner}</BotMessage>
   );
 
   const completion = runOpenAICompletion(openai, {
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4-turbo-preview',
     stream: true,
     messages: [
       {
         role: 'system',
         content: `\
 You are a stock trading conversation bot and you can help users buy stocks, step by step.
+You can let the user throw confetti, as many times as they want, to celebrate.
 You and the user can discuss stock prices and the user can adjust the amount of stocks they want to buy, or place an order, in the UI.
 
 Messages inside [] means that it's a UI element or a user event. For example:
 - "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
 - "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
 
+If the user requests add recipient, call \`add_recipient\`.
+If the user requests send coin to someone, call \`send_coin\`.
+If the user requests confetti button, call \`confetti_button\` to show button confetti.
+If the user requests throwing confetti, call \`throw_confetti\` to throw confetti.
 If the user requests purchasing a stock, call \`show_stock_purchase_ui\` to show the purchase UI.
 If the user just wants the price, call \`show_stock_price\` to show the price.
 If you want to show trending stocks, call \`list_stocks\`.
@@ -140,7 +82,44 @@ Besides that, you can also chat with users and do some calculations if needed.`,
         name: info.name,
       })),
     ],
+
     functions: [
+      {
+        name: 'add_recipient',
+        description:
+          'Show form for user to add name with evm recipient address',
+        parameters: z.object({
+          name: z.string(),
+          recipient: z.string(),
+        }),
+      },
+      {
+        name: 'send_coin',
+        parameters: z
+          .object({
+            amount: z.number(),
+            recipient: z.string(),
+          })
+          .required(),
+      },
+      {
+        name: 'flip_coin',
+        parameters: z.object({
+          times: z.string(),
+          results: z.string(),
+        }),
+      },
+      {
+        name: 'confetti_button',
+        description:
+          'Show a button to the user for the user to tap on it to create confetti',
+        parameters: z.object({}),
+      },
+      {
+        name: 'throw_confetti',
+        description: 'Throw confetti to the user. Use this to celebrate.',
+        parameters: z.object({}),
+      },
       {
         name: 'show_stock_price',
         description:
@@ -149,10 +128,10 @@ Besides that, you can also chat with users and do some calculations if needed.`,
           symbol: z
             .string()
             .describe(
-              'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.',
+              'The name of the crypto currency. e.g. bitcoin/ethereum...'
             ),
-          price: z.number().describe('The price of the stock.'),
-          delta: z.number().describe('The change in price of the stock'),
+          // price: z.number().describe('The price of the stock.'),
+          // delta: z.number().describe('The change in price of the stock'),
         }),
       },
       {
@@ -163,13 +142,13 @@ Besides that, you can also chat with users and do some calculations if needed.`,
           symbol: z
             .string()
             .describe(
-              'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.',
+              'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
             ),
           price: z.number().describe('The price of the stock.'),
           numberOfShares: z
             .number()
             .describe(
-              'The **number of shares** for a stock or currency to purchase. Can be optional if the user did not specify it.',
+              'The **number of shares** for a stock or currency to purchase. Can be optional if the user did not specify it.'
             ),
         }),
       },
@@ -182,7 +161,7 @@ Besides that, you can also chat with users and do some calculations if needed.`,
               symbol: z.string().describe('The symbol of the stock'),
               price: z.number().describe('The price of the stock'),
               delta: z.number().describe('The change in price of the stock'),
-            }),
+            })
           ),
         }),
       },
@@ -198,7 +177,7 @@ Besides that, you can also chat with users and do some calculations if needed.`,
                 .describe('The date of the event, in ISO-8601 format'),
               headline: z.string().describe('The headline of the event'),
               description: z.string().describe('The description of the event'),
-            }),
+            })
           ),
         }),
       },
@@ -214,11 +193,77 @@ Besides that, you can also chat with users and do some calculations if needed.`,
     }
   });
 
+  completion.onFunctionCall(
+    'add_recipient',
+    ({ name, recipient }: { name: string; recipient: string }) => {
+      reply.done(
+        <BotMessage>
+          <AddRecipientComponent name={name} recipient={recipient} />
+        </BotMessage>
+      );
+    }
+  );
+
+  completion.onFunctionCall(
+    'send_coin',
+    ({ amount, recipient }: { amount: number; recipient: string }) => {
+      reply.done(
+        <BotMessage>
+          <SendCoinConfirm amount={amount} recipient={recipient} />
+        </BotMessage>
+      );
+    }
+  );
+
+  completion.onFunctionCall(
+    'flip_coin',
+    ({ times, results }: { times: string; results: string }) => {
+      reply.done(
+        <BotMessage>
+          <div>{times}</div>
+          <div>{results}</div>
+        </BotMessage>
+      );
+    }
+  );
+
+  completion.onFunctionCall('confetti_button', () => {
+    reply.done(
+      <BotMessage>
+        <ConfettiButton />
+      </BotMessage>
+    );
+    aiState.done([
+      ...aiState.get(),
+      {
+        role: 'function',
+        name: 'confetti_button',
+        content: `[User has requested to show confetti button]`,
+      },
+    ]);
+  });
+
+  completion.onFunctionCall('throw_confetti', () => {
+    reply.done(
+      <BotMessage>
+        <Confetti />
+      </BotMessage>
+    );
+    aiState.done([
+      ...aiState.get(),
+      {
+        role: 'function',
+        name: 'throw_confetti',
+        content: `[User has requested to throw confetti]`,
+      },
+    ]);
+  });
+
   completion.onFunctionCall('list_stocks', async ({ stocks }) => {
     reply.update(
       <BotCard>
         <StocksSkeleton />
-      </BotCard>,
+      </BotCard>
     );
 
     await sleep(1000);
@@ -226,7 +271,7 @@ Besides that, you can also chat with users and do some calculations if needed.`,
     reply.done(
       <BotCard>
         <Stocks stocks={stocks} />
-      </BotCard>,
+      </BotCard>
     );
 
     aiState.done([
@@ -243,7 +288,7 @@ Besides that, you can also chat with users and do some calculations if needed.`,
     reply.update(
       <BotCard>
         <EventsSkeleton />
-      </BotCard>,
+      </BotCard>
     );
 
     await sleep(1000);
@@ -251,14 +296,14 @@ Besides that, you can also chat with users and do some calculations if needed.`,
     reply.done(
       <BotCard>
         <Events events={events} />
-      </BotCard>,
+      </BotCard>
     );
 
     aiState.done([
       ...aiState.get(),
       {
         role: 'function',
-        name: 'get_events',
+        name: 'list_stocks',
         content: JSON.stringify(events),
       },
     ]);
@@ -266,35 +311,61 @@ Besides that, you can also chat with users and do some calculations if needed.`,
 
   completion.onFunctionCall(
     'show_stock_price',
-    async ({ symbol, price, delta }) => {
+    async ({
+      symbol,
+      // price,
+      // delta,
+    }: {
+      symbol: string;
+      // price: number;
+      // delta: number;
+    }) => {
       reply.update(
         <BotCard>
           <StockSkeleton />
-        </BotCard>,
+        </BotCard>
       );
 
-      await sleep(1000);
+      console.log('symbol', symbol);
+
+      const response = await fetch(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${symbol}&vs_currencies=usd`
+      );
+
+      const data: CoinGeckoResponse = await response.json();
+      const coinName = Object.keys(data)[0];
+      const price = data[coinName].usd;
+
+      // await sleep(1000);
 
       reply.done(
         <BotCard>
-          <Stock name={symbol} price={price} delta={delta} />
-        </BotCard>,
+          <Stock name={symbol} price={price} />
+        </BotCard>
       );
 
-      aiState.done([
-        ...aiState.get(),
-        {
-          role: 'function',
-          name: 'show_stock_price',
-          content: `[Price of ${symbol} = ${price}]`,
-        },
-      ]);
-    },
+      // aiState.done([
+      //   ...aiState.get(),
+      //   {
+      //     role: 'function',
+      //     name: 'show_stock_price',
+      //     content: `[Price of ${symbol} = ${price}]`,
+      //   },
+      // ]);
+    }
   );
 
   completion.onFunctionCall(
     'show_stock_purchase_ui',
-    ({ symbol, price, numberOfShares = 100 }) => {
+    ({
+      symbol,
+      price,
+      numberOfShares = 100,
+    }: {
+      symbol: string;
+      price: number;
+      numberOfShares?: number;
+    }) => {
       if (numberOfShares <= 0 || numberOfShares > 1000) {
         reply.done(<BotMessage>Invalid amount</BotMessage>);
         aiState.done([
@@ -323,7 +394,7 @@ Besides that, you can also chat with users and do some calculations if needed.`,
               price={+price}
             />
           </BotCard>
-        </>,
+        </>
       );
       aiState.done([
         ...aiState.get(),
@@ -335,7 +406,7 @@ Besides that, you can also chat with users and do some calculations if needed.`,
           }]`,
         },
       ]);
-    },
+    }
   );
 
   return {
@@ -343,26 +414,3 @@ Besides that, you can also chat with users and do some calculations if needed.`,
     display: reply.value,
   };
 }
-
-// Define necessary types and create the AI.
-
-const initialAIState: {
-  role: 'user' | 'assistant' | 'system' | 'function';
-  content: string;
-  id?: string;
-  name?: string;
-}[] = [];
-
-const initialUIState: {
-  id: number;
-  display: React.ReactNode;
-}[] = [];
-
-export const AI = createAI({
-  actions: {
-    submitUserMessage,
-    confirmPurchase,
-  },
-  initialUIState,
-  initialAIState,
-});
