@@ -3,6 +3,7 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
+    DATABASE_URL: z.string().url(),
     DEEPGRAM_API_KEY: z.string().min(1),
   },
   client: {
