@@ -1,5 +1,6 @@
 {
-  "name": "ai-rsc-demo",
+  "name": "linea-gateway",
+  "author": "aeither",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -49,6 +50,7 @@
     "react-textarea-autosize": "^8.5.3",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "thirdweb": "^1.0.0-beta-40f2a60b64ca216459cd7b56dbabd41e938afe66-20240315013202",
     "usehooks-ts": "^2.15.1",
     "viem": "^2.7.22",
     "wagmi": "^2.5.7",
