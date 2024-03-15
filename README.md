@@ -1,3 +1,19 @@
+name
+
+logo 480x480
+
+Vision
+
+Description
+
+Github repo URL
+
+project demo URL
+
+demo Video URL
+
+Team Info
+
 # Linea Gateway
 
 # Demo
