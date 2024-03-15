@@ -63,7 +63,7 @@ export default function Page() {
   }, [inputRef]);
 
   const [name, setName] = useState(null);
-  const { address, isConnected } = useAccount();
+  // const { address, isConnected } = useAccount();
 
   useEffect(() => {
     const fetchData = async () => {
