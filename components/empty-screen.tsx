@@ -1,75 +1,187 @@
 import { Button } from '@/components/ui/button';
-import { ExternalLink } from '@/components/external-link';
-import { IconArrowRight } from '@/components/ui/icons';
-
-const exampleMessages = [
-  {
-    heading: 'What are the trending stocks?',
-    message: 'What are the trending stocks?',
-  },
-  {
-    heading: "What's the stock price of AAPL?",
-    message: "What's the stock price of AAPL?",
-  },
-  {
-    heading: "I'd like to buy 10 shares of MSFT",
-    message: "I'd like to buy 10 shares of MSFT",
-  },
-];
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  Shortcut,
+  getShortcutsFromLocalStorage,
+  saveShortcutsToLocalStorage,
+} from '@/lib/utils/messages';
+import { Label } from '@radix-ui/react-label';
+import { Edit, XIcon } from 'lucide-react';
+import { Suspense, useState } from 'react';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
 
 export function EmptyScreen({
   submitMessage,
 }: {
   submitMessage: (message: string) => void;
 }) {
+  const [shortcuts, setShortcuts] = useState(getShortcutsFromLocalStorage());
+  const [editMode, setEditMode] = useState(false);
+
+  const handleAddShortcut = (newShortcut: Shortcut) => {
+    const updatedShortcuts = [...shortcuts, newShortcut];
+    setShortcuts(updatedShortcuts);
+    saveShortcutsToLocalStorage(updatedShortcuts);
+  };
+
+  const handleRemoveShortcut = (index: number) => {
+    const updatedShortcuts = [...shortcuts];
+    updatedShortcuts.splice(index, 1);
+    setShortcuts(updatedShortcuts);
+    saveShortcutsToLocalStorage(updatedShortcuts);
+  };
   return (
-    <div className="mx-auto max-w-2xl px-4">
-      <div className="rounded-lg border bg-background p-8 mb-4">
-        <h1 className="mb-2 text-lg font-semibold">
-          Welcome to AI SDK 3.0 Generative UI demo!
-        </h1>
-        <p className="mb-2 leading-normal text-muted-foreground">
-          This is a demo of an interactive financial assistant. It can show you
-          stocks, tell you their prices, and even help you buy shares.
-        </p>
-        <p className="mb-2 leading-normal text-muted-foreground">
-          The demo is built with{' '}
-          <ExternalLink href="https://nextjs.org">Next.js</ExternalLink> and the{' '}
-          <ExternalLink href="https://sdk.vercel.ai/docs">
-            Vercel AI SDK
-          </ExternalLink>
-          .
-        </p>
-        <p className="mb-2 leading-normal text-muted-foreground">
-          It uses{' '}
-          <ExternalLink href="https://vercel.com/blog/ai-sdk-3-generative-ui">
-            React Server Components
-          </ExternalLink>{' '}
-          to combine text with UI generated as output of the LLM. The UI state
-          is synced through the SDK so the model is aware of your interactions
-          as they happen.
-        </p>
-        <p className="leading-normal text-muted-foreground">Try an example:</p>
-        <div className="mt-4 flex flex-col items-start space-y-2 mb-4">
-          {exampleMessages.map((message, index) => (
-            <Button
-              key={index}
-              variant="link"
-              className="h-auto p-0 text-base"
-              onClick={async () => {
-                submitMessage(message.message);
-              }}
-            >
-              <IconArrowRight className="mr-2 text-muted-foreground" />
-              {message.heading}
-            </Button>
-          ))}
+    <>
+      <Suspense>
+        <div className='mx-auto max-w-2xl px-4'>
+          <div className='rounded-lg border bg-background p-8 mb-4'>
+            <div className='flex w-full justify-between items-center mb-4'>
+              <h1 className='text-lg font-semibold'>Start with shortcuts</h1>
+              <div className='flex gap-2'>
+                <Button
+                  onClick={() => setEditMode(!editMode)}
+                  variant={'outline'}
+                >
+                  <Edit size={'sm'} />
+                </Button>
+                <DialogAddButton addShortcut={handleAddShortcut} />
+              </div>
+            </div>
+            <div className='grid grid-cols-2 gap-4'>
+              {shortcuts.map((message: Shortcut, index: number) => (
+                <ShortcutCard
+                  key={index}
+                  index={index}
+                  message={message}
+                  submitMessage={submitMessage}
+                  editMode={editMode}
+                  onRemove={handleRemoveShortcut}
+                />
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
-      <p className="leading-normal text-muted-foreground text-[0.8rem] text-center max-w-96 ml-auto mr-auto">
-        Note: Data and latency are simulated for illustrative purposes and
-        should not be considered as financial advice.
-      </p>
-    </div>
+      </Suspense>
+    </>
+  );
+}
+
+function ShortcutCard({
+  submitMessage,
+  message,
+  index,
+  editMode,
+  onRemove,
+}: {
+  submitMessage: any;
+  message: any;
+  index: any;
+  editMode: boolean;
+  onRemove: any;
+}) {
+  return (
+    <>
+      <Card
+        key={index}
+        onClick={async () => {
+          submitMessage(message.message);
+        }}
+        className='cursor-pointer relative group p-4 border border-gray-700 rounded-lg hover:bg-gray-800 transition-colors duration-300 h-20'
+      >
+        <CardContent className='h-full'>
+          <div className='h-full w-full flex flex-col justify-between items-start'>
+            {editMode ? (
+              <button
+                className='absolute top-2 right-2 opacity-70 group-hover:opacity-100 duration-300 bg-red-500 rounded-full p-1'
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent event bubbling
+
+                  onRemove(index);
+                }}
+              >
+                <XIcon className='text-white h-5 w-5' />
+              </button>
+            ) : null}
+            <p className='text-white text-left w-full'>{message.heading}</p>
+          </div>
+        </CardContent>
+      </Card>
+    </>
+  );
+}
+
+function DialogAddButton({
+  addShortcut,
+}: {
+  addShortcut: (newShortcut: Shortcut) => void;
+}) {
+  const [newHeading, setNewHeading] = useState('');
+  const [newMessage, setNewMessage] = useState('');
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant='default'>Add</Button>
+      </DialogTrigger>
+      <DialogContent className='sm:max-w-md'>
+        <DialogHeader>
+          <DialogTitle>Add shortcut</DialogTitle>
+        </DialogHeader>
+        <div className='flex items-center space-x-2'>
+          <div className='grid flex-1 gap-2'>
+            <Label htmlFor='heading' className='sr-only'>
+              Heading
+            </Label>
+            <Input
+              id='heading'
+              onChange={(e) => setNewHeading(e.target.value)}
+              placeholder='Today trending topics'
+            />
+          </div>
+        </div>
+        <div className='flex items-center space-x-2'>
+          <div className='grid flex-1 gap-2'>
+            <Label htmlFor='message' className='sr-only'>
+              Message
+            </Label>
+            <Textarea
+              id='message'
+              onChange={(e) => setNewMessage(e.target.value)}
+              placeholder='Search for today hottest trends'
+            />
+          </div>
+        </div>
+        <DialogFooter className='sm:justify-start'>
+          <DialogClose asChild>
+            <Button type='button' variant='secondary'>
+              Close
+            </Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button
+              onClick={() => {
+                addShortcut({
+                  heading: newHeading,
+                  message: newMessage,
+                });
+              }}
+              disabled={newHeading == '' || newMessage == ''}
+            >
+              Add
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
