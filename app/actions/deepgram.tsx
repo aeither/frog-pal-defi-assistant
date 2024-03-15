@@ -1,11 +1,12 @@
 "use server";
 
+import { env } from "@/env";
 import { createClient } from "@deepgram/sdk";
 
 export async function transcribeAudio(formData: FormData) {
   const audio = formData.get("audio");
 
-  const deepgram = createClient(process.env.DEEPGRAM_API_KEY as string);
+  const deepgram = createClient(env.DEEPGRAM_API_KEY);
 
   const response = await deepgram.listen.prerecorded.transcribeFile(
     await (audio as any).arrayBuffer(),
