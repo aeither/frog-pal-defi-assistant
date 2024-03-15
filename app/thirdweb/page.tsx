@@ -57,7 +57,7 @@ export default function Home() {
           <div>
             <h3>Uploaded Image URI:</h3>
             <p>{uploadedImageUri}</p>
-            <img src={uploadedImageUri} alt='Uploaded PNG' />
+            <MediaRenderer src={uploadedImageUri} alt='Uploaded PNG' />
           </div>
         )}
       </div>
