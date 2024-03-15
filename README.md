@@ -1,5 +1,7 @@
 name
 
+slides
+
 logo 480x480
 
 Vision
