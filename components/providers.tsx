@@ -9,6 +9,7 @@ import { WagmiProvider, createConfig, createStorage, http } from 'wagmi';
 import { sepolia } from 'wagmi/chains';
 import { ThirdwebProvider } from 'thirdweb/react';
 import { createThirdwebClient } from 'thirdweb';
+import { thirdwebClient } from '@/lib/utils/config';
 
 // if (!env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID)
 //   throw new Error('NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID not found');
@@ -43,15 +44,11 @@ import { createThirdwebClient } from 'thirdweb';
 
 // const queryClient = new QueryClient();
 
-const client = createThirdwebClient({
-  clientId: env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID,
-});
-
 export function Providers({ children, ...props }: ThemeProviderProps) {
   return (
     <NextThemesProvider {...props}>
       <TooltipProvider delayDuration={0}>
-        <ThirdwebProvider client={client}>{children}</ThirdwebProvider>
+        <ThirdwebProvider client={thirdwebClient}>{children}</ThirdwebProvider>
       </TooltipProvider>
     </NextThemesProvider>
   );
