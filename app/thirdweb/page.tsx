@@ -1,22 +1,28 @@
 'use client';
 
-import { useState } from 'react';
-import Image from 'next/image';
-import {
-  ZerionChain,
-  getChains,
-  getPortfolio,
-  PortfolioType,
-} from '../actions/zerion';
-import { getTransactions } from '../actions/zerion/transactions';
-import PortfolioComponent from '@/components/portfolio/PortfolioComponent';
-import { ZerionTransactionType } from '../actions/zerion/transactions';
-import Transaction from '@/components/transactions/Transaction';
-import { TokenPosition, getTokens } from '../actions/zerion/tokens';
-import TokenList from '@/components/tokens/TokenComponent';
-import { MediaRenderer } from 'thirdweb/react';
-import { upload } from 'thirdweb/storage';
 import { thirdwebClient } from '@/lib/utils/config';
+import { useState } from 'react';
+import {
+  MediaRenderer,
+  TransactionButton,
+  useActiveAccount,
+  useSendTransaction,
+} from 'thirdweb/react';
+import { upload } from 'thirdweb/storage';
+import { getContract } from 'thirdweb/contract';
+import { defineChain } from 'thirdweb/chains';
+import { prepareContractCall, toWei } from 'thirdweb';
+import { Button } from '@/components/ui/button';
+
+const lineaChain = defineChain({
+  id: 59144,
+  rpc: 'https://linea.blockpi.network/v1/rpc/public',
+});
+
+const lineaGoerli = defineChain({
+  id: 59140,
+  rpc: 'https://rpc.goerli.linea.build',
+});
 
 export default function Home() {
   const [image, setImage] = useState<File | undefined>(undefined);
@@ -63,6 +69,57 @@ export default function Home() {
       </div>
 
       <MediaRenderer src='ipfs://QmV4HC9fNrPJQeYpbW55NLLuSBMyzE11zS1L4HmL6Lbk7X' />
+
+      <MintTokenButton />
     </div>
+  );
+}
+
+// const deployToken = async () => {
+//    const client = createThirdwebClient({
+//   clientId: "<your_client_id>",
+// });
+//   const sdk = await ThirdwebSDK.fromWallet(wallet, 'sepolia');
+//   const address = await sdk.deployer.('nft-collection', {
+//     name: 'My NFT Contract',
+//     primary_sale_recipient: '0x...',
+//   });
+//   console.log('Deployed at', address);
+// };
+
+function MintTokenButton() {
+  const activeAccount = useActiveAccount();
+  const { mutateAsync: sendTx, data: transactionHash } = useSendTransaction();
+
+  const mintToken = async () => {
+    const contract = getContract({
+      client: thirdwebClient,
+      address: '0x5259123c149ae1FcDC5C2741aa05C25e8d8a8812',
+      chain: lineaGoerli,
+    });
+
+    const tx = prepareContractCall({
+      contract,
+      // pass the method signature that you want to call
+      method: 'function mintTo(address to, uint256 amount)',
+      // and the params for that method
+      // their types are automatically inferred based on the method signature
+      params: [activeAccount ? activeAccount.address : '', toWei('100')],
+    });
+
+    const transactionHash = await sendTx(tx);
+    console.log('🚀 ~ mintToken ~ transactionHash:', transactionHash);
+  };
+
+  return (
+    <>
+      <Button
+        onClick={() => {
+          mintToken();
+        }}
+      >
+        Mint Token
+      </Button>
+    </>
   );
 }
