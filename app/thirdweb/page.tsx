@@ -16,8 +16,16 @@ import {
 import { upload } from 'thirdweb/storage';
 import { getContract } from 'thirdweb/contract';
 import { defineChain } from 'thirdweb/chains';
-import { prepareContractCall, toEther, toWei } from 'thirdweb';
+import {
+  hexToString,
+  prepareContractCall,
+  prepareTransaction,
+  toEther,
+  toWei,
+} from 'thirdweb';
 import { Button } from '@/components/ui/button';
+import { useSendSwap } from 'thirdweb/react';
+import { useEstimateGas } from 'thirdweb/react';
 
 const lineaChain = defineChain({
   id: 59144,
@@ -34,6 +42,7 @@ export default function Home() {
   const [uploadedImageUri, setUploadedImageUri] = useState('');
   const activeAccount = useActiveAccount();
   const { mutate: sendTx, data: transactionHash } = useSendTransaction();
+  const { mutate: estimateGas, data: gasEstimate } = useEstimateGas();
 
   const leaderboardContract = getContract({
     client: thirdwebClient,
@@ -79,6 +88,17 @@ export default function Home() {
     const transactionHash = await sendTx(tx);
   };
 
+  const callEstimateGas = async () => {
+    const tx = prepareTransaction({
+      to: '0x000000000000000000000000000000000000dead',
+      value: toWei('1'),
+      gas: BigInt(160000),
+      chain: lineaGoerli,
+      client: thirdwebClient,
+    });
+    const estimatedGas = await estimateGas(tx);
+  };
+
   return (
     <div className='flex flex-col items-center justify-center min-h-screen'>
       <div>
@@ -104,6 +124,17 @@ export default function Home() {
       >
         Add Score
       </Button>
+
+      <Button
+        onClick={async () => {
+          await callEstimateGas();
+        }}
+      >
+        Estimate Gas
+      </Button>
+      {gasEstimate !== undefined && (
+        <div>Gas: {BigInt(gasEstimate).toString()}</div>
+      )}
     </div>
   );
 }
