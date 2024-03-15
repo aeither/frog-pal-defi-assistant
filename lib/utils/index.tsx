@@ -1,13 +1,9 @@
-import {
-  TAnyToolDefinitionArray,
-  TToolDefinitionMap,
-} from '@/lib/utils/tool-definition';
+import { ToolDefinition } from '@/lib/utils/tool-definition';
 import { OpenAIStream } from 'ai';
 import type OpenAI from 'openai';
 import zodToJsonSchema from 'zod-to-json-schema';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { z } from 'zod';
 
 const consumeStream = async (stream: ReadableStream) => {
   const reader = stream.getReader();
@@ -21,26 +17,19 @@ export function runOpenAICompletion<
   T extends Omit<
     Parameters<typeof OpenAI.prototype.chat.completions.create>[0],
     'functions'
-  >,
-  const TFunctions extends TAnyToolDefinitionArray,
->(
-  openai: OpenAI,
-  params: T & {
-    functions: TFunctions;
+  > & {
+    functions: ToolDefinition<any, any>[];
   },
-) {
+>(openai: OpenAI, params: T) {
   let text = '';
   let hasFunction = false;
 
-  type TToolMap = TToolDefinitionMap<TFunctions>;
+  type FunctionNames =
+    T['functions'] extends Array<any> ? T['functions'][number]['name'] : never;
+
   let onTextContent: (text: string, isFinal: boolean) => void = () => {};
 
-  const functionsMap: Record<string, TFunctions[number]> = {};
-  for (const fn of params.functions) {
-    functionsMap[fn.name] = fn;
-  }
-
-  let onFunctionCall = {} as any;
+  let onFunctionCall: Record<string, (args: Record<string, any>) => void> = {};
 
   const { functions, ...rest } = params;
 
@@ -50,7 +39,7 @@ export function runOpenAICompletion<
         (await openai.chat.completions.create({
           ...rest,
           stream: true,
-          functions: functions.map(fn => ({
+          functions: functions.map((fn) => ({
             name: fn.name,
             description: fn.description,
             parameters: zodToJsonSchema(fn.parameters) as Record<
@@ -62,25 +51,9 @@ export function runOpenAICompletion<
         {
           async experimental_onFunctionCall(functionCallPayload) {
             hasFunction = true;
-
-            if (!onFunctionCall[functionCallPayload.name]) {
-              return;
-            }
-
-            // we need to convert arguments from z.input to z.output
-            // this is necessary if someone uses a .default in their schema
-            const zodSchema = functionsMap[functionCallPayload.name].parameters;
-            const parsedArgs = zodSchema.safeParse(
-              functionCallPayload.arguments,
-            );
-
-            if (!parsedArgs.success) {
-              throw new Error(
-                `Invalid function call in message. Expected a function call object`,
-              );
-            }
-
-            onFunctionCall[functionCallPayload.name]?.(parsedArgs.data);
+            onFunctionCall[
+              functionCallPayload.name as keyof typeof onFunctionCall
+            ]?.(functionCallPayload.arguments as Record<string, any>);
           },
           onToken(token) {
             text += token;
@@ -91,30 +64,20 @@ export function runOpenAICompletion<
             if (hasFunction) return;
             onTextContent(text, true);
           },
-        },
-      ),
+        }
+      )
     );
   })();
 
   return {
     onTextContent: (
-      callback: (text: string, isFinal: boolean) => void | Promise<void>,
+      callback: (text: string, isFinal: boolean) => void | Promise<void>
     ) => {
       onTextContent = callback;
     },
-    onFunctionCall: <TName extends TFunctions[number]['name']>(
-      name: TName,
-      callback: (
-        args: z.output<
-          TName extends keyof TToolMap
-            ? TToolMap[TName] extends infer TToolDef
-              ? TToolDef extends TAnyToolDefinitionArray[number]
-                ? TToolDef['parameters']
-                : never
-              : never
-            : never
-        >,
-      ) => void | Promise<void>,
+    onFunctionCall: (
+      name: FunctionNames,
+      callback: (args: any) => void | Promise<void>
     ) => {
       onFunctionCall[name] = callback;
     },
@@ -132,13 +95,13 @@ export const formatNumber = (value: number) =>
   }).format(value);
 
 export const runAsyncFnWithoutBlocking = (
-  fn: (...args: any) => Promise<any>,
+  fn: (...args: any) => Promise<any>
 ) => {
   fn();
 };
 
 export const sleep = (ms: number) =>
-  new Promise(resolve => setTimeout(resolve, ms));
+  new Promise((resolve) => setTimeout(resolve, ms));
 
 // Fake data
 export function getStockPrice(name: string) {

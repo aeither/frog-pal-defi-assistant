@@ -3,12 +3,12 @@ import {
   InsertUser,
   recipients,
   users,
-} from "@/drizzle/schema";
-import dotenv from "dotenv";
-import { drizzle } from "drizzle-orm/postgres-js";
-import { loremIpsum } from "lorem-ipsum";
-import postgres from "postgres";
-import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
+} from '@/drizzle/schema';
+import dotenv from 'dotenv';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import { loremIpsum } from 'lorem-ipsum';
+import postgres from 'postgres';
+import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
 dotenv.config();
 
 // Disable prefetch as it is not supported for "Transaction" pool mode
@@ -36,7 +36,7 @@ async function main() {
       dummyRecipients.push({
         user_id: account1.address,
         recipient: account2.address,
-        name: `${loremIpsum({ count: 1, units: "word" })}`,
+        name: `${loremIpsum({ count: 1, units: 'word' })}`,
       });
     }
 
@@ -45,18 +45,18 @@ async function main() {
       .insert(users)
       .values(dummyUsers)
       .returning();
-    console.log("🚀 ~ main ~ storedUsers:", storedUsers);
+    console.log('🚀 ~ main ~ storedUsers:', storedUsers);
 
     // Recipients
     const storedRecipients: any = await db
       .insert(recipients)
       .values(dummyRecipients)
       .returning();
-    console.log("🚀 ~ main ~ storedRecipients:", storedRecipients);
+    console.log('🚀 ~ main ~ storedRecipients:', storedRecipients);
 
     process.exit(0);
   } catch (error) {
-    console.error("Error performing migration: ", error);
+    console.error('Error performing migration: ', error);
     process.exit(1);
   }
 }
