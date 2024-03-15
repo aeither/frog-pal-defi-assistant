@@ -7,10 +7,12 @@ export const env = createEnv({
     OPENAI_API_KEY: z.string().min(1),
     DEEPGRAM_API_KEY: z.string().min(1),
     ZERION_API_KEY: z.string().min(1),
+    THIRDWEB_SECRET_KEY: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: z.string().min(1),
     NEXT_PUBLIC_ALCHEMY_ID: z.string().min(1),
+    NEXT_PUBLIC_THIRDWEB_CLIENT_ID: z.string().min(1),
   },
   // If you're using Next.js < 13.4.4, you'll need to specify the runtimeEnv manually
   //   runtimeEnv: {
@@ -23,5 +25,6 @@ export const env = createEnv({
     NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID:
       process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     NEXT_PUBLIC_ALCHEMY_ID: process.env.NEXT_PUBLIC_ALCHEMY_ID,
+    NEXT_PUBLIC_THIRDWEB_CLIENT_ID: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID,
   },
 });
