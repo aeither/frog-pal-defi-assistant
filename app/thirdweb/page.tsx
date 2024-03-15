@@ -1,31 +1,23 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import {
   leaderboardAddress,
   thirdwebClient,
   tokenAddress,
 } from '@/lib/utils/config';
 import { useState } from 'react';
+import { prepareContractCall, prepareTransaction, toWei } from 'thirdweb';
+import { defineChain } from 'thirdweb/chains';
+import { getContract } from 'thirdweb/contract';
 import {
   MediaRenderer,
-  TransactionButton,
   useActiveAccount,
+  useEstimateGas,
   useReadContract,
   useSendTransaction,
 } from 'thirdweb/react';
 import { upload } from 'thirdweb/storage';
-import { getContract } from 'thirdweb/contract';
-import { defineChain } from 'thirdweb/chains';
-import {
-  hexToString,
-  prepareContractCall,
-  prepareTransaction,
-  toEther,
-  toWei,
-} from 'thirdweb';
-import { Button } from '@/components/ui/button';
-import { useSendSwap } from 'thirdweb/react';
-import { useEstimateGas } from 'thirdweb/react';
 
 const lineaChain = defineChain({
   id: 59144,

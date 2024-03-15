@@ -30,8 +30,11 @@ export default function Home() {
           const formData = new FormData();
           formData.append('audio', audioBlob, 'recording.wav');
 
-          const users = await transcribeAudio(formData);
-          console.log('🚀 ~ mediaRecorder.addEventListener ~ users:', users);
+          const data = await transcribeAudio(formData);
+          console.log(
+            '🚀 ~ mediaRecorder.addEventListener ~ users:',
+            data.transcript
+          );
           // const response = await transcribeAudio(audioBlob);
           // setTranscript(response.transcript);
         } catch (error) {
