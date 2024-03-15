@@ -1,17 +1,22 @@
 'use client';
 
-import { thirdwebClient } from '@/lib/utils/config';
+import {
+  leaderboardAddress,
+  thirdwebClient,
+  tokenAddress,
+} from '@/lib/utils/config';
 import { useState } from 'react';
 import {
   MediaRenderer,
   TransactionButton,
   useActiveAccount,
+  useReadContract,
   useSendTransaction,
 } from 'thirdweb/react';
 import { upload } from 'thirdweb/storage';
 import { getContract } from 'thirdweb/contract';
 import { defineChain } from 'thirdweb/chains';
-import { prepareContractCall, toWei } from 'thirdweb';
+import { prepareContractCall, toEther, toWei } from 'thirdweb';
 import { Button } from '@/components/ui/button';
 
 const lineaChain = defineChain({
@@ -27,6 +32,14 @@ const lineaGoerli = defineChain({
 export default function Home() {
   const [image, setImage] = useState<File | undefined>(undefined);
   const [uploadedImageUri, setUploadedImageUri] = useState('');
+  const activeAccount = useActiveAccount();
+  const { mutate: sendTx, data: transactionHash } = useSendTransaction();
+
+  const leaderboardContract = getContract({
+    client: thirdwebClient,
+    address: leaderboardAddress,
+    chain: lineaGoerli,
+  });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -53,6 +66,19 @@ export default function Home() {
     }
   };
 
+  const callAddScore = async () => {
+    const tx = prepareContractCall({
+      contract: leaderboardContract,
+      // pass the method signature that you want to call
+      method: 'function addScore(address user, uint256 score)',
+      // and the params for that method
+      // their types are automatically inferred based on the method signature
+      params: [activeAccount ? activeAccount.address : '', toWei('100')],
+    });
+
+    const transactionHash = await sendTx(tx);
+  };
+
   return (
     <div className='flex flex-col items-center justify-center min-h-screen'>
       <div>
@@ -67,10 +93,17 @@ export default function Home() {
           </div>
         )}
       </div>
-
       <MediaRenderer src='ipfs://QmV4HC9fNrPJQeYpbW55NLLuSBMyzE11zS1L4HmL6Lbk7X' />
-
       <MintTokenButton />
+      <LeaderboardList />
+
+      <Button
+        onClick={async () => {
+          await callAddScore();
+        }}
+      >
+        Add Score
+      </Button>
     </div>
   );
 }
@@ -94,7 +127,7 @@ function MintTokenButton() {
   const mintToken = async () => {
     const contract = getContract({
       client: thirdwebClient,
-      address: '0x5259123c149ae1FcDC5C2741aa05C25e8d8a8812',
+      address: tokenAddress,
       chain: lineaGoerli,
     });
 
@@ -120,6 +153,46 @@ function MintTokenButton() {
       >
         Mint Token
       </Button>
+    </>
+  );
+}
+
+function LeaderboardList() {
+  const contract = getContract({
+    client: thirdwebClient,
+    address: leaderboardAddress,
+    chain: lineaGoerli,
+  });
+  const { data, isLoading } = useReadContract({
+    contract: contract,
+    method: 'getAll',
+    params: [],
+  });
+
+  return (
+    <>
+      <div className='overflow-x-auto'>
+        <table className='table-zebra table-compact table w-full'>
+          <thead>
+            <tr>
+              <th className='text-start'>User</th>
+              <th className='text-start'>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {!isLoading &&
+              data &&
+              data.map((item: any, index: number) => {
+                return (
+                  <tr key={index} className='hover'>
+                    <td>{`${item.user.slice(0, 4)}...${item.user.slice(-4)}`}</td>
+                    <td>{item.score.toString()}</td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 }
