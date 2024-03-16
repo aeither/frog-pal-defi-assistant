@@ -1,14 +1,21 @@
 'use client';
 
 import { thirdwebClient } from '@/lib/utils/config';
-import { useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { MediaRenderer } from 'thirdweb/react';
 import { upload } from 'thirdweb/storage';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { ClipboardIcon } from 'lucide-react';
+import { useLeaderboard } from '@/lib/hooks/add-score';
+import { AI } from '@/app/actions/ai';
+import { useUIState } from 'ai/rsc';
+import { SystemMessage } from '../llm-stocks';
 
 export function UploadComponent() {
+  const [, setMessages] = useUIState<typeof AI>();
+
+  const { isSuccess, callAddScore, data } = useLeaderboard();
   const [uploadedImageUri, setUploadedImageUri] = useState('');
   const [selectedImage, setSelectedImage] = useState<File | undefined>(
     undefined
@@ -31,6 +38,9 @@ export function UploadComponent() {
           files: [selectedImage],
         });
         setUploadedImageUri(uris[0]);
+
+        // add score
+        await callAddScore();
       } catch (error) {
         console.error('Error uploading image:', error);
       }
@@ -38,6 +48,26 @@ export function UploadComponent() {
       console.error('No image selected');
     }
   };
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      const explorerLink = `https://explorer.goerli.linea.build/tx/${data?.transactionHash}`;
+
+      setMessages((currentMessages: any) => [
+        ...currentMessages,
+        {
+          id: Date.now(),
+          display: (
+            <SystemMessage>
+              <a href={explorerLink} target='_blank' className='underline'>
+                Open Explorer
+              </a>
+            </SystemMessage>
+          ),
+        },
+      ]);
+    }
+  }, [isSuccess, data]);
 
   return (
     <>

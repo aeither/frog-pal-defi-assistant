@@ -1,5 +1,5 @@
 import { env } from '@/env';
-import { createThirdwebClient, defineChain } from 'thirdweb';
+import { createThirdwebClient, defineChain, getContract } from 'thirdweb';
 // import { http, createConfig } from 'wagmi';
 
 // export const config = createConfig({
@@ -26,3 +26,9 @@ export const lineaGoerli = defineChain({
 //   id: 59144,
 //   rpc: 'https://linea.blockpi.network/v1/rpc/public',
 // });
+
+export const leaderboardContract = getContract({
+  client: thirdwebClient,
+  address: leaderboardAddress,
+  chain: lineaGoerli,
+});

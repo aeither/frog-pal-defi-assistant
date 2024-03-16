@@ -98,22 +98,22 @@ export default function Page() {
         id: Date.now(),
         display: uploadComponent,
       },
-      {
-        id: Date.now(),
-        display: botMessage,
-      },
-      {
-        id: Date.now(),
-        display: mintTokenComponent,
-      },
-      {
-        id: Date.now(),
-        display: purchaseComponent,
-      },
-      {
-        id: Date.now(),
-        display: leaderboardList,
-      },
+      // {
+      //   id: Date.now(),
+      //   display: botMessage,
+      // },
+      // {
+      //   id: Date.now(),
+      //   display: mintTokenComponent,
+      // },
+      // {
+      //   id: Date.now(),
+      //   display: purchaseComponent,
+      // },
+      // {
+      //   id: Date.now(),
+      //   display: leaderboardList,
+      // },
     ]);
   }, []);
 
