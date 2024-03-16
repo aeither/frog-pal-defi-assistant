@@ -33,6 +33,6 @@ Team Info
 Linea Partners
 
 - Thirdweb
--
+- GoPlus
 
 # Architecture
