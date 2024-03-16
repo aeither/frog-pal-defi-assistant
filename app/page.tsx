@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { SetStateAction, useEffect, useRef, useState } from 'react';
 
 import { UserMessage } from '@/components/llm-stocks/message';
 import { useActions, useUIState } from 'ai/rsc';
@@ -22,7 +22,8 @@ import { useAccount } from 'wagmi';
 import { type AI } from './actions/ai';
 import { getAllUsers } from './actions/db';
 import dynamic from 'next/dynamic';
-import { MicIcon } from 'lucide-react';
+import { ArrowUpIcon, MicIcon } from 'lucide-react';
+import VoiceButton from '@/components/voice/VoiceButton';
 
 const BrowserOnlyEmptyScreen = dynamic(
   () => import('../components/empty-screen').then((mod) => mod.EmptyScreen),
@@ -225,27 +226,19 @@ export default function Page() {
                   <div className='flex flex-row gap-2'>
                     {/* <Tooltip>
                     <TooltipTrigger asChild> */}
-                    <Button
-                      type='button'
-                      size='icon'
-                      variant={'outline'}
-                      className='rounded-full p-2'
-                    >
-                      <MicIcon />
-                      <span className='sr-only'>Send voice</span>
-                    </Button>
+                    <VoiceButton setTranscript={setInputValue} />
                     {/* </TooltipTrigger>
                     <TooltipContent>Send voice</TooltipContent>
                   </Tooltip> */}
-
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button
                           type='submit'
                           size='icon'
                           disabled={inputValue === ''}
+                          className='rounded-full'
                         >
-                          <IconArrowElbow />
+                          <ArrowUpIcon className='' size={'18px'} />
                           <span className='sr-only'>Send message</span>
                         </Button>
                       </TooltipTrigger>
