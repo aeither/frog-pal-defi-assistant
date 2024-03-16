@@ -23,23 +23,11 @@ export function SendCoinConfirm({
   recipient: string;
 }) {
   const [innerUI, setInnerUI] = useState<null | React.ReactNode>(null);
-  const { showForm } = useActions();
   const [messages, setMessages] = useUIState<typeof AI>();
 
   // State variables for amount and recipient, initialized with the prop values
   const [currentAmount, setCurrentAmount] = useState<number>(amount);
   const [currentRecipient, setCurrentRecipient] = useState<string>(recipient);
-
-  const callAIUpdateUI = async () => {
-    const response = await showForm('name', 123, 456);
-    setInnerUI(response.purchasingUI);
-
-    // Insert a new system message to the UI.
-    setMessages((currentMessages: any) => [
-      ...currentMessages,
-      response.newMessage,
-    ]);
-  };
 
   // Event handlers for input fields
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {

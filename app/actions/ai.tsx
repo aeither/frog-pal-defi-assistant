@@ -2,7 +2,6 @@ import 'server-only';
 
 import { createAI } from 'ai/rsc';
 import { confirmPurchase } from './ai-actions/confirmPurchase';
-import { showForm } from './ai-actions/showForm';
 import { submitUserMessage } from './ai-actions/submitUserMessage';
 
 const initialAIState: {
@@ -21,7 +20,6 @@ export const AI = createAI({
   actions: {
     submitUserMessage,
     confirmPurchase,
-    showForm,
   },
   initialUIState,
   initialAIState,

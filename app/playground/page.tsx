@@ -73,7 +73,7 @@ const botMessage = <BotMessage>What is happening?</BotMessage>;
 
 export default function Page() {
   const [messages, setMessages] = useUIState<typeof AI>();
-  const { submitUserMessage, showForm } = useActions();
+  const { submitUserMessage } = useActions();
   const [inputValue, setInputValue] = useState('');
   const { formRef, onKeyDown } = useEnterSubmit();
   const inputRef = useRef<HTMLTextAreaElement>(null);

@@ -11,19 +11,7 @@ import { useSignMessage } from 'wagmi';
 export function ConfettiButton() {
   const { signMessage } = useSignMessage();
   const [innerUI, setInnerUI] = useState<null | React.ReactNode>(null);
-  const { showForm } = useActions();
   const [messages, setMessages] = useUIState<typeof AI>();
-
-  const callAIUpdateUI = async () => {
-    const response = await showForm('name', 123, 456);
-    setInnerUI(response.purchasingUI);
-
-    // Insert a new system message to the UI.
-    setMessages((currentMessages: any) => [
-      ...currentMessages,
-      response.newMessage,
-    ]);
-  };
 
   const logMessages = async () => {
     console.log('messages', messages);
@@ -48,14 +36,6 @@ export function ConfettiButton() {
           }}
         >
           Confetti!!!
-        </Button>
-
-        <Button
-          onClick={async () => {
-            await callAIUpdateUI();
-          }}
-        >
-          Purchase share
         </Button>
 
         <Button
