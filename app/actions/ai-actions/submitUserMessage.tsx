@@ -30,6 +30,7 @@ import { getAllRecipientsByAddress } from '../db';
 import { ViewRecipentsComponent } from '@/components/contact-list/ViewRecipentsComponent';
 import MintTokenComponent from '@/components/web3/MintTokenComponent';
 import UploadComponent from '@/components/web3/UploadComponent';
+import { checkTokenSecurity } from '../goplus';
 
 interface CoinGeckoResponse {
   [key: string]: {
@@ -71,6 +72,7 @@ Messages inside [] means that it's a UI element or a user event. For example:
 - "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
 - "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
 
+If the user requests smart contract token security check, call \`security_check\`.
 If the user requests upload image, call \`upload_ipfs\`.
 If the user requests mint tokens and provides the amount, call \`mint_token\`.
 If the user requests view tokens or coins by providing an EVM address, call \`check_tokens_by_address\`.
@@ -94,6 +96,13 @@ Besides that, you can also chat with users and do some calculations if needed.`,
     ],
 
     functions: [
+      {
+        name: 'security_check',
+        description: 'check with go plus if token smart contract is secure',
+        parameters: z.object({
+          address: z.string(),
+        }),
+      },
       {
         name: 'upload_ipfs',
         description: 'Show form for the user to upload image to IPFS',
@@ -247,6 +256,15 @@ Besides that, you can also chat with users and do some calculations if needed.`,
       aiState.done([...aiState.get(), { role: 'assistant', content }]);
     }
   });
+
+  completion.onFunctionCall(
+    'security_check',
+    async ({ address }: { address: string }) => {
+      const data = await checkTokenSecurity(address);
+      const status = data.status !== 0 ? 'It is safe!' : 'Not safe!';
+      reply.done(<BotMessage>{status}</BotMessage>);
+    }
+  );
 
   completion.onFunctionCall('upload_ipfs', () => {
     reply.done(
