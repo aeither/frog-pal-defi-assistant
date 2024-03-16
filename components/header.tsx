@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import { ShellIcon } from 'lucide-react';
-import { ConnectButton, darkTheme } from 'thirdweb/react';
+import { ConnectButton } from 'thirdweb/react';
 
 export function Header() {
   return (

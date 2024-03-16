@@ -41,8 +41,12 @@ export function BotMessage({
       )}
     >
       <div className='flex flex-row w-full justify-between py-2'>
-        <div className='flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm bg-primary text-primary-foreground'>
-          <IconAI />
+        <div className='flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm bg-primary overflow-hidden'>
+          <img
+            src='/frog_pal_square.jpg'
+            alt=''
+            className='object-cover w-full h-full'
+          />
         </div>
         <div className='flex'>
           <div className='flex h-8 w-8 shrink-0 select-none items-center justify-center'>

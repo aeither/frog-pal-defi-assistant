@@ -42,36 +42,47 @@ export function EmptyScreen({
   };
   return (
     <>
-      <Suspense>
-        <div className='mx-auto max-w-2xl px-4'>
-          <div className='rounded-lg border bg-background p-8 mb-4'>
-            <div className='flex w-full justify-between items-center mb-4'>
-              <h1 className='text-lg font-semibold'>Shortcuts</h1>
-              <div className='flex gap-2'>
-                <Button
-                  onClick={() => setEditMode(!editMode)}
-                  variant={'outline'}
-                >
-                  <Edit size={'sm'} />
-                </Button>
-                <DialogAddButton addShortcut={handleAddShortcut} />
-              </div>
-            </div>
-            <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-              {shortcuts.map((message: Shortcut, index: number) => (
-                <ShortcutCard
-                  key={index}
-                  index={index}
-                  message={message}
-                  submitMessage={submitMessage}
-                  editMode={editMode}
-                  onRemove={handleRemoveShortcut}
-                />
-              ))}
+      <div className=' mx-auto max-w-2xl px-4 py-6'>
+        <div className='flex shrink-0 select-none items-center justify-center rounded-md border shadow-sm bg-primary overflow-hidden'>
+          <img
+            src='/frog_pal_square.jpg'
+            alt=''
+            className='object-cover w-full h-full'
+          />
+        </div>
+        <h2 className='flex text-center'>
+          Hey there buddy, it's your old pal Frog! What's shakin'? Need a hand
+          with anything?
+        </h2>
+      </div>
+      <div className='mx-auto max-w-2xl px-4'>
+        <div className='rounded-lg border bg-background p-8 mb-4'>
+          <div className='flex w-full justify-between items-center mb-4'>
+            <h1 className='text-lg font-semibold'>Shortcuts</h1>
+            <div className='flex gap-2'>
+              <Button
+                onClick={() => setEditMode(!editMode)}
+                variant={'outline'}
+              >
+                <Edit size={'sm'} />
+              </Button>
+              <DialogAddButton addShortcut={handleAddShortcut} />
             </div>
           </div>
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+            {shortcuts.map((message: Shortcut, index: number) => (
+              <ShortcutCard
+                key={index}
+                index={index}
+                message={message}
+                submitMessage={submitMessage}
+                editMode={editMode}
+                onRemove={handleRemoveShortcut}
+              />
+            ))}
+          </div>
         </div>
-      </Suspense>
+      </div>
     </>
   );
 }
