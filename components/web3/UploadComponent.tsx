@@ -6,6 +6,7 @@ import { MediaRenderer } from 'thirdweb/react';
 import { upload } from 'thirdweb/storage';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { ClipboardIcon } from 'lucide-react';
 
 export function UploadComponent() {
   const [uploadedImageUri, setUploadedImageUri] = useState('');
@@ -40,20 +41,42 @@ export function UploadComponent() {
 
   return (
     <>
-      <div className='max-w-md mx-auto mt-8'>
-        <h2 className='text-2xl font-bold mb-4'>Upload PNG Image</h2>
+      <div className='max-w-md mx-auto'>
+        <h2 className='text-lg font-bold mb-4'>Upload Image</h2>
         <div className='flex items-center justify-center w-full'>
-          <Input type='file' accept='image/png' onChange={handleImageChange} />
+          <Input
+            className='w-full'
+            type='file'
+            accept='image/png'
+            onChange={handleImageChange}
+          />
         </div>
-        <div className='p-4'>
-          <Button onClick={handleUpload}>Upload</Button>
+        <div className='pt-4'>
+          <Button onClick={handleUpload} disabled={selectedImage === undefined}>
+            Upload
+          </Button>
         </div>
         {uploadedImageUri && (
-          <div className='mt-8 w-full'>
+          <div className='flex flex-col mt-8 w-full gap-2'>
             <h3 className='text-lg font-bold mb-2'>Uploaded Image</h3>
-            <p className='mb-4 truncate'>{uploadedImageUri}</p>
-            <div className='flex rounded-md'>
-              <MediaRenderer src={uploadedImageUri} alt='Uploaded PNG' />
+            <div className='w-full max-w-sm'>
+              <div className='flex w-full max-w-sm items-center space-x-2'>
+                <Input readOnly value={uploadedImageUri} />
+                <Button type='submit'>
+                  <ClipboardIcon className='h-4 w-4' />
+                  <span className='sr-only'>Copy</span>
+                </Button>
+              </div>
+              <div>
+                <div />
+              </div>
+            </div>
+            <div className='flex w-full object-cover bg-clip-content'>
+              <MediaRenderer
+                className='w-full rounded-md object-cover'
+                src={uploadedImageUri}
+                alt='Uploaded PNG'
+              />
             </div>
           </div>
         )}
