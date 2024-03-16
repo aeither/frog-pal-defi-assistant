@@ -22,6 +22,8 @@ import { createStreamableUI, getMutableAIState } from 'ai/rsc';
 import OpenAI from 'openai';
 import { z } from 'zod';
 import { AI } from '../ai';
+import { getPortfolio } from '../zerion';
+import PortfolioComponent from '@/components/portfolio/PortfolioComponent';
 
 interface CoinGeckoResponse {
   [key: string]: {
@@ -56,6 +58,7 @@ export async function submitUserMessage(content: string) {
       {
         role: 'system',
         content: `\
+You are Frog, Defi Companion who is going to help the user navigate and help.
 You are a stock trading conversation bot and you can help users buy stocks, step by step.
 You can let the user throw confetti, as many times as they want, to celebrate.
 You and the user can discuss stock prices and the user can adjust the amount of stocks they want to buy, or place an order, in the UI.
@@ -64,6 +67,7 @@ Messages inside [] means that it's a UI element or a user event. For example:
 - "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
 - "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
 
+If the user requests portfolio balance by providing an address, call \`check_portfolio_by_address\`.
 If the user requests add recipient, call \`add_recipient\`.
 If the user requests send coin to someone, call \`send_coin\`.
 If the user requests confetti button, call \`confetti_button\` to show button confetti.
@@ -74,6 +78,7 @@ If you want to show trending stocks, call \`list_stocks\`.
 If you want to show events, call \`get_events\`.
 If the user wants to sell stock, or complete another impossible task, respond that you are a demo and cannot do that.
 
+Remember you are a conversational bot. Your answers are concise and straight to the point.
 Besides that, you can also chat with users and do some calculations if needed.`,
       },
       ...aiState.get().map((info: any) => ({
@@ -84,6 +89,13 @@ Besides that, you can also chat with users and do some calculations if needed.`,
     ],
 
     functions: [
+      {
+        name: 'check_portfolio_by_address',
+        description: 'Check the portfolio balance',
+        parameters: z.object({
+          address: z.string(),
+        }),
+      },
       {
         name: 'add_recipient',
         description:
@@ -199,6 +211,18 @@ Besides that, you can also chat with users and do some calculations if needed.`,
       reply.done(
         <BotMessage>
           <AddRecipientComponent name={name} recipient={recipient} />
+        </BotMessage>
+      );
+    }
+  );
+
+  completion.onFunctionCall(
+    'check_portfolio_by_address',
+    async ({ address }: { address: string }) => {
+      const data = await getPortfolio(address);
+      reply.done(
+        <BotMessage>
+          <PortfolioComponent portfolio={data.data} />
         </BotMessage>
       );
     }

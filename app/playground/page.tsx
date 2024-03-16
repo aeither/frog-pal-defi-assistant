@@ -13,6 +13,7 @@ import { ChatList } from '@/components/chat-list';
 import { FooterText } from '@/components/footer';
 import LeaderboardList from '@/components/leaderboard/LeaderboardList';
 import { Purchase } from '@/components/llm-stocks';
+import PortfolioComponent from '@/components/portfolio/PortfolioComponent';
 import { Button } from '@/components/ui/button';
 import { IconPlus } from '@/components/ui/icons';
 import {
@@ -28,6 +29,7 @@ import { useEnterSubmit } from '@/lib/hooks/use-enter-submit';
 import { ArrowUpIcon } from 'lucide-react';
 import Textarea from 'react-textarea-autosize';
 import { AI } from '../actions/ai';
+import { PortfolioType, getPortfolio } from '../actions/zerion';
 
 const userMessage = (
   <UserMessage>
@@ -69,6 +71,26 @@ const leaderboardList = (
   </BotCard>
 );
 
+const PortfolioDisplayComponent = () => {
+  const [portfolioData, setPortfolioData] = useState<PortfolioType>();
+
+  const callGetPortfolio = async () => {
+    const data = await getPortfolio(
+      '0x88c6C46EBf353A52Bdbab708c23D0c81dAA8134A'
+    );
+    setPortfolioData(data.data);
+  };
+  useEffect(() => {
+    callGetPortfolio();
+  }, []);
+
+  return (
+    <BotCard>
+      {portfolioData && <PortfolioComponent portfolio={portfolioData} />}
+    </BotCard>
+  );
+};
+
 const botMessage = <BotMessage>What is happening?</BotMessage>;
 
 export default function Page() {
@@ -92,6 +114,10 @@ export default function Page() {
       {
         id: Date.now(),
         display: botMessage,
+      },
+      {
+        id: Date.now(),
+        display: <PortfolioDisplayComponent />,
       },
       // {
       //   id: Date.now(),

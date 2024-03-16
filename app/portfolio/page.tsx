@@ -1,19 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import PortfolioComponent from '@/components/portfolio/PortfolioComponent';
+import TokenList from '@/components/tokens/TokenComponent';
+import Transaction from '@/components/transactions/Transaction';
 import Image from 'next/image';
+import { useState } from 'react';
 import {
+  PortfolioType,
   ZerionChain,
   getChains,
   getPortfolio,
-  PortfolioType,
 } from '../actions/zerion';
-import { getTransactions } from '../actions/zerion/transactions';
-import PortfolioComponent from '@/components/portfolio/PortfolioComponent';
-import { ZerionTransactionType } from '../actions/zerion/transactions';
-import Transaction from '@/components/transactions/Transaction';
 import { TokenPosition, getTokens } from '../actions/zerion/tokens';
-import TokenList from '@/components/tokens/TokenComponent';
+import {
+  ZerionTransactionType,
+  getTransactions,
+} from '../actions/zerion/transactions';
 
 export default function Home() {
   const [chains, setChains] = useState<ZerionChain[]>([]);

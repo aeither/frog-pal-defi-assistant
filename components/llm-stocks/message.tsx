@@ -19,7 +19,7 @@ export function UserMessage({ children }: { children: React.ReactNode }) {
           <CircleEllipsisIcon size={'18px'} className='opacity-70' />
         </div>
       </div>
-      <div className='flex-1 space-y-2 overflow-hidden px-1'>{children}</div>
+      <div className='flex-1 space-y-2 overflow-hidden'>{children}</div>
     </div>
   );
 }
@@ -61,7 +61,7 @@ export function BotMessage({
           </div>
         </div>
       </div>
-      <div className='flex-1 space-y-2 overflow-hidden px-1'>{children}</div>
+      <div className='flex-1 space-y-2 overflow-hidden'>{children}</div>
     </div>
   );
 }
@@ -88,7 +88,7 @@ export function BotCard({
           <CopyIcon size={'18px'} className='opacity-70' />
         </div>
       </div>
-      <div className='flex w-full px-1'>{children}</div>
+      <div className='flex w-full'>{children}</div>
     </div>
   );
 }
