@@ -26,6 +26,7 @@ import { ArrowUpIcon } from 'lucide-react';
 import Textarea from 'react-textarea-autosize';
 import { AI } from '../actions/ai';
 import UploadComponent from '@/components/web3/UploadComponent';
+import MintTokenComponent from '@/components/web3/MintTokenComponent';
 
 const userMessage = (
   <UserMessage>
@@ -46,6 +47,12 @@ const userMessage = (
 const uploadComponent = (
   <BotCard>
     <UploadComponent />
+  </BotCard>
+);
+
+const mintTokenComponent = (
+  <BotCard>
+    <MintTokenComponent amount={'123'} />
   </BotCard>
 );
 
@@ -87,6 +94,10 @@ export default function Page() {
       {
         id: Date.now(),
         display: botMessage,
+      },
+      {
+        id: Date.now(),
+        display: mintTokenComponent,
       },
       {
         id: Date.now(),

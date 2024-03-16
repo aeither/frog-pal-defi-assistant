@@ -24,9 +24,11 @@ Team Info
 
 # Overview
 
+Intent-based UX: users express their desired outcomes or goals. AI determine and execute the necessary actions to achieve those intents
+
 # Tech Stack
 
-- NextJS 14
+- NextJS 14. Generative UI leveraging React Server Components and Server Actions
 - Drizzle ORM
 - Neon DB
 
