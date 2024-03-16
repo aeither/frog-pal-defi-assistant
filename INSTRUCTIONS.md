@@ -60,3 +60,9 @@ npx drizzle-kit push:pg
 - functions config: Define AI Functions on what parameters to receive
 - onFunctionCall: run code and reply with UI Component
 - Modular UI Components
+
+## Thirdweb
+
+- hooks/add-score.tsx
+- components/web3/ mint and upload
+- components/leaderboard
