@@ -1,4 +1,6 @@
-name
+name: Frog Pal
+
+short: Your Trusted DeFi Companion to navigate Linea.
 
 slides
 
