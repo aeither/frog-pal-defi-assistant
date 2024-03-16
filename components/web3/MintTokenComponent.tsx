@@ -62,7 +62,7 @@ export function MintTokenComponent({ amount }: { amount: string }) {
 
   return (
     <>
-      <div className='flex w-full items-center space-x-2'>
+      <div className='max-w-md mx-auto flex w-full items-center space-x-2'>
         <Input
           value={currentAmount}
           type='number'

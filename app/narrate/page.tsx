@@ -5,7 +5,6 @@ import { generateAudio } from '../actions/deepgram';
 
 export default function Home() {
   const [text, setText] = useState('Hello, how can I help you today?');
-  //   const [audioData, setAudioData] = useState<Uint8Array | null>(null);
   const [base64Audio, setBase64Audio] = useState<string | null>(null);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -47,14 +46,6 @@ export default function Home() {
       >
         Generate Audio
       </button>
-      {/* {audioData && (
-        <audio controls>
-          <source
-            src={URL.createObjectURL(new Blob([audioData]))}
-            type='audio/wav'
-          />
-        </audio>
-      )} */}
       {base64Audio && (
         <audio controls>
           <source

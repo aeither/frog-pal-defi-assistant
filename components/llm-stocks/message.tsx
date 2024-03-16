@@ -71,7 +71,7 @@ export function BotCard({
           <CopyIcon size={'18px'} className='opacity-70' />
         </div>
       </div>
-      <div className='flex-1 px-1'>{children}</div>
+      <div className='flex w-full px-1'>{children}</div>
     </div>
   );
 }
