@@ -2,15 +2,15 @@
 
 import { ChatList } from '@/components/chat-list';
 import { FooterText } from '@/components/footer';
-import LeaderboardList from '@/components/leaderboard/LeaderboardList';
-import { Purchase } from '@/components/llm-stocks';
+// import LeaderboardList from '@/components/leaderboard/LeaderboardList';
+// import { Purchase } from '@/components/llm-stocks';
 import {
   BotCard,
   BotMessage,
   UserMessage,
 } from '@/components/llm-stocks/message';
-import PortfolioComponent from '@/components/portfolio/PortfolioComponent';
-import { TransactionList } from '@/components/transactions/TransactionList';
+// import PortfolioComponent from '@/components/portfolio/PortfolioComponent';
+// import { TransactionList } from '@/components/transactions/TransactionList';
 import { Button } from '@/components/ui/button';
 import { IconPlus } from '@/components/ui/icons';
 import {
@@ -28,119 +28,119 @@ import { ArrowUpIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 import { AI } from '../actions/ai';
-import {
-  PortfolioType,
-  TokenPosition,
-  getPortfolio,
-  getTokens,
-} from '../actions/zerion';
-import {
-  ZerionTransactionType,
-  getTransactions,
-} from '../actions/zerion/transactions';
-import TokenList from '@/components/tokens/TokenComponent';
+// import {
+//   PortfolioType,
+//   TokenPosition,
+//   getPortfolio,
+//   getTokens,
+// } from '../actions/zerion';
+// import {
+//   ZerionTransactionType,
+//   getTransactions,
+// } from '../actions/zerion/transactions';
+// import TokenList from '@/components/tokens/TokenComponent';
 
-const userMessage = (
-  <UserMessage>
-    Minim deserunt incididunt commodo veniam. Cupidatat enim excepteur ut enim
-    velit esse veniam eiusmod officia amet. Veniam proident veniam tempor dolore
-    dolore dolor incididunt. Minim elit sit exercitation excepteur cupidatat
-    tempor magna qui elit anim. Cillum magna nulla commodo ad ut reprehenderit
-    excepteur amet commodo tempor consequat commodo tempor. Deserunt excepteur
-    id irure cillum labore veniam sint adipisicing. Culpa voluptate veniam anim
-    incididunt ad ex cillum id dolore veniam consequat amet elit dolore. In
-    consequat ullamco labore aliquip. Dolor aute exercitation aliqua incididunt
-    voluptate cupidatat reprehenderit. Velit mollit sit occaecat do duis eu
-    culpa proident. Ut tempor minim Lorem adipisicing et et voluptate eu elit
-    voluptate dolor incididunt magna. Consequat nisi sint elit est cillum.
-  </UserMessage>
-);
+// const userMessage = (
+//   <UserMessage>
+//     Minim deserunt incididunt commodo veniam. Cupidatat enim excepteur ut enim
+//     velit esse veniam eiusmod officia amet. Veniam proident veniam tempor dolore
+//     dolore dolor incididunt. Minim elit sit exercitation excepteur cupidatat
+//     tempor magna qui elit anim. Cillum magna nulla commodo ad ut reprehenderit
+//     excepteur amet commodo tempor consequat commodo tempor. Deserunt excepteur
+//     id irure cillum labore veniam sint adipisicing. Culpa voluptate veniam anim
+//     incididunt ad ex cillum id dolore veniam consequat amet elit dolore. In
+//     consequat ullamco labore aliquip. Dolor aute exercitation aliqua incididunt
+//     voluptate cupidatat reprehenderit. Velit mollit sit occaecat do duis eu
+//     culpa proident. Ut tempor minim Lorem adipisicing et et voluptate eu elit
+//     voluptate dolor incididunt magna. Consequat nisi sint elit est cillum.
+//   </UserMessage>
+// );
 
-const uploadComponent = (
-  <BotCard>
-    <UploadComponent />
-  </BotCard>
-);
+// const uploadComponent = (
+//   <BotCard>
+//     <UploadComponent />
+//   </BotCard>
+// );
 
-const mintTokenComponent = (
-  <BotCard>
-    <MintTokenComponent amount={'123'} />
-  </BotCard>
-);
+// const mintTokenComponent = (
+//   <BotCard>
+//     <MintTokenComponent amount={'123'} />
+//   </BotCard>
+// );
 
-const purchaseComponent = (
-  <BotCard>
-    <Purchase defaultAmount={10} name={'symbol'} price={+123} />
-  </BotCard>
-);
+// const purchaseComponent = (
+//   <BotCard>
+//     <Purchase defaultAmount={10} name={'symbol'} price={+123} />
+//   </BotCard>
+// );
 
-const leaderboardList = (
-  <BotCard>
-    <LeaderboardList />
-  </BotCard>
-);
+// const leaderboardList = (
+//   <BotCard>
+//     <LeaderboardList />
+//   </BotCard>
+// );
 
-const PortfolioDisplayComponent = () => {
-  const [portfolioData, setPortfolioData] = useState<PortfolioType>();
+// const PortfolioDisplayComponent = () => {
+//   const [portfolioData, setPortfolioData] = useState<PortfolioType>();
 
-  const callGetPortfolio = async () => {
-    const data = await getPortfolio(
-      '0x88c6C46EBf353A52Bdbab708c23D0c81dAA8134A'
-    );
-    setPortfolioData(data.data);
-  };
-  useEffect(() => {
-    callGetPortfolio();
-  }, []);
+//   const callGetPortfolio = async () => {
+//     const data = await getPortfolio(
+//       '0x88c6C46EBf353A52Bdbab708c23D0c81dAA8134A'
+//     );
+//     setPortfolioData(data.data);
+//   };
+//   useEffect(() => {
+//     callGetPortfolio();
+//   }, []);
 
-  return (
-    <BotCard>
-      {portfolioData && <PortfolioComponent portfolio={portfolioData} />}
-    </BotCard>
-  );
-};
+//   return (
+//     <BotCard>
+//       {portfolioData && <PortfolioComponent portfolio={portfolioData} />}
+//     </BotCard>
+//   );
+// };
 
-const TransactionDisplayComponent = () => {
-  const [transactions, setTransactions] = useState<ZerionTransactionType[]>();
+// const TransactionDisplayComponent = () => {
+//   const [transactions, setTransactions] = useState<ZerionTransactionType[]>();
 
-  const callGetTransactions = async () => {
-    const data = await getTransactions(
-      '0x88c6C46EBf353A52Bdbab708c23D0c81dAA8134A'
-    );
+//   const callGetTransactions = async () => {
+//     const data = await getTransactions(
+//       '0x88c6C46EBf353A52Bdbab708c23D0c81dAA8134A'
+//     );
 
-    setTransactions(data.data);
-  };
-  useEffect(() => {
-    callGetTransactions();
-  }, []);
+//     setTransactions(data.data);
+//   };
+//   useEffect(() => {
+//     callGetTransactions();
+//   }, []);
 
-  return (
-    <BotCard>
-      {transactions && <TransactionList transactions={transactions} />}
-    </BotCard>
-  );
-};
+//   return (
+//     <BotCard>
+//       {transactions && <TransactionList transactions={transactions} />}
+//     </BotCard>
+//   );
+// };
 
-const TokenDisplayComponent = () => {
-  const [addressTokens, setAddressTokens] = useState<TokenPosition[]>();
+// const TokenDisplayComponent = () => {
+//   const [addressTokens, setAddressTokens] = useState<TokenPosition[]>();
 
-  const callGetTransactions = async () => {
-    const data = await getTokens('0x88c6C46EBf353A52Bdbab708c23D0c81dAA8134A');
+//   const callGetTransactions = async () => {
+//     const data = await getTokens('0x88c6C46EBf353A52Bdbab708c23D0c81dAA8134A');
 
-    setAddressTokens(data.data);
-  };
-  useEffect(() => {
-    callGetTransactions();
-  }, []);
+//     setAddressTokens(data.data);
+//   };
+//   useEffect(() => {
+//     callGetTransactions();
+//   }, []);
 
-  return (
-    <BotCard>
-      {addressTokens && <TokenList positions={addressTokens} />}
-    </BotCard>
-  );
-};
+//   return (
+//     <BotCard>
+//       {addressTokens && <TokenList positions={addressTokens} />}
+//     </BotCard>
+//   );
+// };
 
-const botMessage = <BotMessage>What is happening?</BotMessage>;
+// const botMessage = <BotMessage>What is happening?</BotMessage>;
 
 export default function Page() {
   const [messages, setMessages] = useUIState<typeof AI>();
@@ -152,10 +152,10 @@ export default function Page() {
   useEffect(() => {
     setMessages((currentMessages) => [
       ...currentMessages,
-      {
-        id: Date.now(),
-        display: userMessage,
-      },
+      // {
+      //   id: Date.now(),
+      //   display: userMessage,
+      // },
       // {
       //   id: Date.now(),
       //   display: uploadComponent,
@@ -164,10 +164,10 @@ export default function Page() {
       //   id: Date.now(),
       //   display: botMessage,
       // },
-      {
-        id: Date.now(),
-        display: <TokenDisplayComponent />,
-      },
+      // {
+      //   id: Date.now(),
+      //   display: <TokenDisplayComponent />,
+      // },
       // {
       //   id: Date.now(),
       //   display: <TransactionDisplayComponent />,
