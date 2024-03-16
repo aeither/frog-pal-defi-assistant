@@ -22,6 +22,7 @@ import { useAccount } from 'wagmi';
 import { type AI } from './actions/ai';
 import { getAllUsers } from './actions/db';
 import dynamic from 'next/dynamic';
+import { MicIcon } from 'lucide-react';
 
 const BrowserOnlyEmptyScreen = dynamic(
   () => import('../components/empty-screen').then((mod) => mod.EmptyScreen),
@@ -34,9 +35,9 @@ export default function Page() {
   const [inputValue, setInputValue] = useState('');
   const { formRef, onKeyDown } = useEnterSubmit();
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [purchasingUI, setPurchasingUI] = useState<null | React.ReactNode>(
-    null
-  );
+  // const [purchasingUI, setPurchasingUI] = useState<null | React.ReactNode>(
+  //   null
+  // );
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -94,14 +95,14 @@ export default function Page() {
 
   return (
     <div>
-      <Button
+      {/* <Button
         onClick={async () => {
           const users = await getAllUsers();
           console.log('🚀 ~ onClick={ ~ users:', users);
         }}
       >
         getAllUsers
-      </Button>
+      </Button> */}
       <div className='pb-[200px] pt-4 md:pt-10'>
         {messages.length ? (
           <>
@@ -132,10 +133,10 @@ export default function Page() {
       </div>
       <div className='fixed inset-x-0 bottom-0 w-full bg-gradient-to-b from-muted/30 from-0% to-muted/30 to-50% duration-300 ease-in-out animate-in dark:from-background/10 dark:from-10% dark:to-background/80 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]'>
         <div className='mx-auto sm:max-w-2xl sm:px-4'>
-          {purchasingUI && (
+          {/* {purchasingUI && (
             <div className='mt-4 text-zinc-200'>{purchasingUI}</div>
-          )}
-          <button
+          )} */}
+          {/* <button
             className='mt-6 w-full rounded-lg bg-green-500 dark:bg-green-500 px-4 py-2 text-zinc-900'
             onClick={async () => {
               const response = await showForm('name', 123, 456);
@@ -149,7 +150,7 @@ export default function Page() {
             }}
           >
             Purchase
-          </button>
+          </button> */}
           <div className='px-4 py-2 space-y-4 border-t shadow-lg bg-background sm:rounded-t-xl sm:border md:py-4'>
             <form
               ref={formRef}
@@ -221,19 +222,36 @@ export default function Page() {
                   onChange={(e) => setInputValue(e.target.value)}
                 />
                 <div className='absolute right-0 top-4 sm:right-4'>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        type='submit'
-                        size='icon'
-                        disabled={inputValue === ''}
-                      >
-                        <IconArrowElbow />
-                        <span className='sr-only'>Send message</span>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Send message</TooltipContent>
-                  </Tooltip>
+                  <div className='flex flex-row gap-2'>
+                    {/* <Tooltip>
+                    <TooltipTrigger asChild> */}
+                    <Button
+                      type='button'
+                      size='icon'
+                      variant={'outline'}
+                      className='rounded-full p-2'
+                    >
+                      <MicIcon />
+                      <span className='sr-only'>Send voice</span>
+                    </Button>
+                    {/* </TooltipTrigger>
+                    <TooltipContent>Send voice</TooltipContent>
+                  </Tooltip> */}
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type='submit'
+                          size='icon'
+                          disabled={inputValue === ''}
+                        >
+                          <IconArrowElbow />
+                          <span className='sr-only'>Send message</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Send message</TooltipContent>
+                    </Tooltip>
+                  </div>
                 </div>
               </div>
             </form>

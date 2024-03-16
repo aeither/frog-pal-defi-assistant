@@ -46,7 +46,7 @@ export function EmptyScreen({
         <div className='mx-auto max-w-2xl px-4'>
           <div className='rounded-lg border bg-background p-8 mb-4'>
             <div className='flex w-full justify-between items-center mb-4'>
-              <h1 className='text-lg font-semibold'>Start with shortcuts</h1>
+              <h1 className='text-lg font-semibold'>Shortcuts</h1>
               <div className='flex gap-2'>
                 <Button
                   onClick={() => setEditMode(!editMode)}
@@ -57,7 +57,7 @@ export function EmptyScreen({
                 <DialogAddButton addShortcut={handleAddShortcut} />
               </div>
             </div>
-            <div className='grid grid-cols-2 gap-4'>
+            <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
               {shortcuts.map((message: Shortcut, index: number) => (
                 <ShortcutCard
                   key={index}
@@ -161,7 +161,7 @@ function DialogAddButton({
             />
           </div>
         </div>
-        <DialogFooter className='sm:justify-start'>
+        <DialogFooter className='sm:justify-end gap-2'>
           <DialogClose asChild>
             <Button type='button' variant='secondary'>
               Close
