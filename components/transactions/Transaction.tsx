@@ -1,20 +1,6 @@
-import React from 'react';
-import TransactionHeader from './TransactionHeader';
-import TransactionDetails from './TransactionDetails';
-import TransactionFee from './TransactionFee';
-import TransactionTransfers from './TransactionTransfers';
 import { ZerionTransactionType } from '@/app/actions/zerion/transactions';
+import React from 'react';
 import { TransactionRow } from './TransactionRow';
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 
 interface TransactionProps {
   transaction: ZerionTransactionType;

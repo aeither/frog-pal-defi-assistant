@@ -1,3 +1,11 @@
+import { ZerionTransactionType } from '@/app/actions/zerion';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { TableCell, TableRow } from '@/components/ui/table';
 import {
   formatTimeAgo,
@@ -5,25 +13,11 @@ import {
   truncateString,
 } from '@/lib/utils/helpers';
 import { Eye } from 'lucide-react';
+import { ScrollArea } from '../ui/scroll-area';
 import TransactionDetails from './TransactionDetails';
 import TransactionFee from './TransactionFee';
 import TransactionHeader from './TransactionHeader';
 import TransactionTransfers from './TransactionTransfers';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
-import { ZerionTransactionType } from '@/app/actions/zerion';
-import { ScrollArea } from '../ui/scroll-area';
 
 interface TransactionOverviewProps {
   transaction: ZerionTransactionType;
