@@ -29,6 +29,7 @@ import TokenList from '@/components/tokens/TokenComponent';
 import { getAllRecipientsByAddress } from '../db';
 import { ViewRecipentsComponent } from '@/components/contact-list/ViewRecipentsComponent';
 import MintTokenComponent from '@/components/web3/MintTokenComponent';
+import UploadComponent from '@/components/web3/UploadComponent';
 
 interface CoinGeckoResponse {
   [key: string]: {
@@ -70,6 +71,7 @@ Messages inside [] means that it's a UI element or a user event. For example:
 - "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
 - "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
 
+If the user requests upload image, call \`upload_ipfs\`.
 If the user requests mint tokens and provides the amount, call \`mint_token\`.
 If the user requests view tokens or coins by providing an EVM address, call \`check_tokens_by_address\`.
 If the user requests view historical transactions or txs by providing an EVM address, call \`check_transactions_by_address\`.
@@ -92,6 +94,11 @@ Besides that, you can also chat with users and do some calculations if needed.`,
     ],
 
     functions: [
+      {
+        name: 'upload_ipfs',
+        description: 'Show form for the user to upload image to IPFS',
+        parameters: z.object({}),
+      },
       {
         name: 'mint_token',
         description: 'Mint an amount of tokens defined by the user',
@@ -239,6 +246,14 @@ Besides that, you can also chat with users and do some calculations if needed.`,
       reply.done();
       aiState.done([...aiState.get(), { role: 'assistant', content }]);
     }
+  });
+
+  completion.onFunctionCall('upload_ipfs', () => {
+    reply.done(
+      <BotCard>
+        <UploadComponent />
+      </BotCard>
+    );
   });
 
   completion.onFunctionCall('mint_token', ({ amount }: { amount: string }) => {
