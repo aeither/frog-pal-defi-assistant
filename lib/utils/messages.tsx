@@ -1,23 +1,23 @@
 const exampleMessages = [
   {
-    heading: 'Show confetti button',
-    message: 'Show confetti button',
+    heading: 'Show me my portfolio',
+    message: 'Show me my portfolio',
   },
   {
-    heading: 'Throw confetti',
-    message: 'Throw confetti',
+    heading: 'I want to upload an Image',
+    message: 'I want to upload an Image',
   },
   {
-    heading: 'What are the trending stocks?',
-    message: 'What are the trending stocks?',
+    heading: 'Open the leaderboard',
+    message: 'Open the leaderboard',
   },
   {
-    heading: "What's the stock price of AAPL?",
-    message: "What's the stock price of AAPL?",
+    heading: 'What is in my favourite list',
+    message: 'What is in my favourite list',
   },
   {
-    heading: "I'd like to buy 10 shares of MSFT",
-    message: "I'd like to buy 10 shares of MSFT",
+    heading: 'Mint me 130 tokens, please',
+    message: 'Mint me 130 tokens, please',
   },
 ];
 
