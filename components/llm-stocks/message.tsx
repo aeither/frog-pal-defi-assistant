@@ -86,7 +86,11 @@ export function BotCard({
             !showAvatar && 'invisible'
           )}
         >
-          <IconAI />
+          <img
+            src='/frog_pal_square.jpg'
+            alt=''
+            className='object-cover w-full h-full'
+          />
         </div>
         <div className='flex h-8 w-8 shrink-0 select-none items-center justify-center'>
           <CopyIcon size={'18px'} className='opacity-70' />
