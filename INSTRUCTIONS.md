@@ -8,6 +8,8 @@
 
 - dotenv not needed. load env vars from `.env.local` for app and `.env` required for drizzle-kit commands
 
+- thirdweb: estimate gas requires simulate contract interaction or defining gas when sending amount
+
 ## Setup DB
 
 Create new Postgres DB on Neon

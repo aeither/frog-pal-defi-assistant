@@ -4,14 +4,15 @@ import { useEffect, useRef, useState } from 'react';
 
 import {
   BotCard,
-  UserMessage,
   BotMessage,
+  UserMessage,
 } from '@/components/llm-stocks/message';
 import { useActions, useUIState } from 'ai/rsc';
 
 import { ChatList } from '@/components/chat-list';
 import { FooterText } from '@/components/footer';
-import { Purchase, Stock } from '@/components/llm-stocks';
+import LeaderboardList from '@/components/leaderboard/LeaderboardList';
+import { Purchase } from '@/components/llm-stocks';
 import { Button } from '@/components/ui/button';
 import { IconPlus } from '@/components/ui/icons';
 import {
@@ -20,13 +21,13 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import VoiceButton from '@/components/voice/VoiceButton';
+import MintTokenComponent from '@/components/web3/MintTokenComponent';
+import UploadComponent from '@/components/web3/UploadComponent';
 import { ChatScrollAnchor } from '@/lib/hooks/chat-scroll-anchor';
 import { useEnterSubmit } from '@/lib/hooks/use-enter-submit';
 import { ArrowUpIcon } from 'lucide-react';
 import Textarea from 'react-textarea-autosize';
 import { AI } from '../actions/ai';
-import UploadComponent from '@/components/web3/UploadComponent';
-import MintTokenComponent from '@/components/web3/MintTokenComponent';
 
 const userMessage = (
   <UserMessage>
@@ -59,6 +60,12 @@ const mintTokenComponent = (
 const purchaseComponent = (
   <BotCard>
     <Purchase defaultAmount={10} name={'symbol'} price={+123} />
+  </BotCard>
+);
+
+const leaderboardList = (
+  <BotCard>
+    <LeaderboardList />
   </BotCard>
 );
 
@@ -102,6 +109,10 @@ export default function Page() {
       {
         id: Date.now(),
         display: purchaseComponent,
+      },
+      {
+        id: Date.now(),
+        display: leaderboardList,
       },
     ]);
   }, []);
