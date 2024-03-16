@@ -42,7 +42,7 @@ export function MintTokenComponent({ amount }: { amount: string }) {
 
   useEffect(() => {
     if (transactionHash) {
-      const explorerLink = `https://explorer.goerli.linea.build/tx/${transactionHash.transactionHash}`;
+      const explorerLink = `https://goerli.lineascan.build/tx/${transactionHash.transactionHash}`;
 
       setMessages((currentMessages) => [
         ...currentMessages,
@@ -80,7 +80,7 @@ export function MintTokenComponent({ amount }: { amount: string }) {
       </div>
 
       {/* {transactionHash && (
-        <div>{`https://explorer.goerli.linea.build/tx/${transactionHash.transactionHash}`}</div>
+        <div>{`https://goerli.lineascan.build/tx/${transactionHash.transactionHash}`}</div>
       )} */}
     </>
   );

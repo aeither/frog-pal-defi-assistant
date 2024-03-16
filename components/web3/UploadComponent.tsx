@@ -51,7 +51,7 @@ export function UploadComponent() {
 
   useEffect(() => {
     if (isSuccess && data) {
-      const explorerLink = `https://explorer.goerli.linea.build/tx/${data?.transactionHash}`;
+      const explorerLink = `https://goerli.lineascan.build/tx/${data?.transactionHash}`;
 
       setMessages((currentMessages: any) => [
         ...currentMessages,

@@ -28,6 +28,7 @@ import { TransactionList } from '@/components/transactions/TransactionList';
 import TokenList from '@/components/tokens/TokenComponent';
 import { getAllRecipientsByAddress } from '../db';
 import { ViewRecipentsComponent } from '@/components/contact-list/ViewRecipentsComponent';
+import MintTokenComponent from '@/components/web3/MintTokenComponent';
 
 interface CoinGeckoResponse {
   [key: string]: {
@@ -69,6 +70,7 @@ Messages inside [] means that it's a UI element or a user event. For example:
 - "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
 - "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
 
+If the user requests mint tokens and provides the amount, call \`mint_token\`.
 If the user requests view tokens or coins by providing an EVM address, call \`check_tokens_by_address\`.
 If the user requests view historical transactions or txs by providing an EVM address, call \`check_transactions_by_address\`.
 If the user requests portfolio balance by providing an EVM address, call \`check_portfolio_by_address\`.
@@ -90,6 +92,13 @@ Besides that, you can also chat with users and do some calculations if needed.`,
     ],
 
     functions: [
+      {
+        name: 'mint_token',
+        description: 'Mint an amount of tokens defined by the user',
+        parameters: z.object({
+          amount: z.string(),
+        }),
+      },
       {
         name: 'check_tokens_by_address',
         description:
@@ -232,6 +241,14 @@ Besides that, you can also chat with users and do some calculations if needed.`,
     }
   });
 
+  completion.onFunctionCall('mint_token', ({ amount }: { amount: string }) => {
+    reply.done(
+      <BotCard>
+        <MintTokenComponent amount={amount} />
+      </BotCard>
+    );
+  });
+
   completion.onFunctionCall(
     'add_recipient',
     ({ name, recipient }: { name: string; recipient: string }) => {
@@ -242,6 +259,7 @@ Besides that, you can also chat with users and do some calculations if needed.`,
       );
     }
   );
+
   completion.onFunctionCall(
     'view_address_list',
     async ({ address }: { address: string }) => {
