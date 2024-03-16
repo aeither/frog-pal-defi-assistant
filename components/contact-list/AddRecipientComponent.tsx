@@ -13,7 +13,10 @@ import {
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { addRecipient } from '@/app/actions/db';
-import { useAccount } from 'wagmi';
+import { useActiveAccount } from 'thirdweb/react';
+import { useUIState } from 'ai/rsc';
+import { AI } from '@/app/actions/ai';
+import { SystemMessage } from '../llm-stocks';
 
 export function AddRecipientComponent({
   name,
@@ -25,7 +28,8 @@ export function AddRecipientComponent({
   // State variables for name and recipient, initialized with the prop values
   const [currentName, setCurrentName] = useState<string>(name);
   const [currentRecipient, setCurrentRecipient] = useState<string>(recipient);
-  const { address } = useAccount();
+  const account = useActiveAccount();
+  const [, setMessages] = useUIState<typeof AI>();
 
   // Event handlers for input fields
   const handlenameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +47,15 @@ export function AddRecipientComponent({
     // Add your logic here to handle the confirmed values
 
     // call DB
-    if (address) addRecipient(currentName, currentRecipient, address);
+    if (account) addRecipient(currentName, currentRecipient, account.address);
+
+    setMessages((currentMessages) => [
+      ...currentMessages,
+      {
+        id: Date.now(),
+        display: <SystemMessage>Recipient added successfully!</SystemMessage>,
+      },
+    ]);
   };
 
   return (

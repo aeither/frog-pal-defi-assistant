@@ -26,6 +26,8 @@ import { getPortfolio, getTokens, getTransactions } from '../zerion';
 import PortfolioComponent from '@/components/portfolio/PortfolioComponent';
 import { TransactionList } from '@/components/transactions/TransactionList';
 import TokenList from '@/components/tokens/TokenComponent';
+import { getAllRecipientsByAddress } from '../db';
+import { ViewRecipentsComponent } from '@/components/contact-list/ViewRecipentsComponent';
 
 interface CoinGeckoResponse {
   [key: string]: {
@@ -71,7 +73,8 @@ If the user requests view tokens or coins by providing an EVM address, call \`ch
 If the user requests view historical transactions or txs by providing an EVM address, call \`check_transactions_by_address\`.
 If the user requests portfolio balance by providing an EVM address, call \`check_portfolio_by_address\`.
 If the user ask for his own portfolio balance call \`check_portfolio_by_address\` with the EVM address. EVM address starts with 0x...
-If the user requests add recipient, call \`add_recipient\`.
+If the user requests add recipient, call \`add_recipient\`. Include callers EVM address
+If the user requests see/watch/view list/contacts or favourites call \`view_address_list\`. Include callers EVM address
 If the user requests send coin to someone, call \`send_coin\`.
 If the user requests confetti button, call \`confetti_button\` to show button confetti.
 If the user requests throwing confetti, call \`throw_confetti\` to throw confetti.
@@ -118,6 +121,15 @@ Besides that, you can also chat with users and do some calculations if needed.`,
         parameters: z.object({
           name: z.string(),
           recipient: z.string(),
+          address: z.string(),
+        }),
+      },
+      {
+        name: 'view_address_list',
+        description:
+          'Show form for user to add name with evm recipient address',
+        parameters: z.object({
+          address: z.string(),
         }),
       },
       {
@@ -224,9 +236,20 @@ Besides that, you can also chat with users and do some calculations if needed.`,
     'add_recipient',
     ({ name, recipient }: { name: string; recipient: string }) => {
       reply.done(
-        <BotMessage>
+        <BotCard>
           <AddRecipientComponent name={name} recipient={recipient} />
-        </BotMessage>
+        </BotCard>
+      );
+    }
+  );
+  completion.onFunctionCall(
+    'view_address_list',
+    async ({ address }: { address: string }) => {
+      const allRecipients = await getAllRecipientsByAddress(address);
+      reply.done(
+        <BotCard>
+          <ViewRecipentsComponent recipients={allRecipients} />
+        </BotCard>
       );
     }
   );
