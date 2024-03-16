@@ -66,3 +66,7 @@ npx drizzle-kit push:pg
 - hooks/add-score.tsx
 - components/web3/ mint and upload
 - components/leaderboard
+
+## Zerion
+
+- Mainnet portfolios

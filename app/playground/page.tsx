@@ -31,6 +31,12 @@ import Textarea from 'react-textarea-autosize';
 import { AI } from '../actions/ai';
 import { PortfolioType, getPortfolio } from '../actions/zerion';
 
+import { TransactionList } from '@/components/transactions/TransactionList';
+import {
+  ZerionTransactionType,
+  getTransactions,
+} from '../actions/zerion/transactions';
+
 const userMessage = (
   <UserMessage>
     Minim deserunt incididunt commodo veniam. Cupidatat enim excepteur ut enim
@@ -91,6 +97,34 @@ const PortfolioDisplayComponent = () => {
   );
 };
 
+const TransactionDisplayComponent = () => {
+  const [transactions, setTransactions] = useState<ZerionTransactionType[]>();
+
+  const callGetTransactions = async () => {
+    const data = await getTransactions(
+      '0x88c6C46EBf353A52Bdbab708c23D0c81dAA8134A'
+    );
+
+    setTransactions(data.data);
+  };
+  useEffect(() => {
+    callGetTransactions();
+  }, []);
+
+  return (
+    <BotCard>
+      {transactions && <TransactionList transactions={transactions} />}
+      {/* {transactions && (
+        <>
+          {transactions.map((tx, i) => (
+            <Transaction key={i} transaction={tx} />
+          ))}
+        </>
+      )}{' '} */}
+    </BotCard>
+  );
+};
+
 const botMessage = <BotMessage>What is happening?</BotMessage>;
 
 export default function Page() {
@@ -111,14 +145,18 @@ export default function Page() {
       //   id: Date.now(),
       //   display: uploadComponent,
       // },
+      // {
+      //   id: Date.now(),
+      //   display: botMessage,
+      // },
       {
         id: Date.now(),
-        display: botMessage,
+        display: <TransactionDisplayComponent />,
       },
-      {
-        id: Date.now(),
-        display: <PortfolioDisplayComponent />,
-      },
+      // {
+      //   id: Date.now(),
+      //   display: <PortfolioDisplayComponent />,
+      // },
       // {
       //   id: Date.now(),
       //   display: mintTokenComponent,
