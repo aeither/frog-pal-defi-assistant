@@ -7,11 +7,11 @@ import { cn } from '@/lib/utils';
 
 export function UserMessage({ children }: { children: React.ReactNode }) {
   return (
-    <div className="group relative flex items-start md:-ml-12">
-      <div className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm bg-background">
+    <div className='group relative flex items-start md:-ml-12'>
+      <div className='flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm bg-background'>
         <IconUser />
       </div>
-      <div className="ml-4 flex-1 space-y-2 overflow-hidden px-1">
+      <div className='ml-4 flex-1 space-y-2 overflow-hidden px-1'>
         {children}
       </div>
     </div>
@@ -27,10 +27,10 @@ export function BotMessage({
 }) {
   return (
     <div className={cn('group relative flex items-start md:-ml-12', className)}>
-      <div className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm bg-primary text-primary-foreground">
+      <div className='flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm bg-primary text-primary-foreground'>
         <IconAI />
       </div>
-      <div className="ml-4 flex-1 space-y-2 overflow-hidden px-1">
+      <div className='ml-4 flex-1 space-y-2 overflow-hidden px-1'>
         {children}
       </div>
     </div>
@@ -45,16 +45,16 @@ export function BotCard({
   showAvatar?: boolean;
 }) {
   return (
-    <div className="group relative flex items-start md:-ml-12">
+    <div className='group relative flex items-start md:-ml-12'>
       <div
         className={cn(
           'flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm bg-primary text-primary-foreground',
-          !showAvatar && 'invisible',
+          !showAvatar && 'invisible'
         )}
       >
         <IconAI />
       </div>
-      <div className="ml-4 flex-1 px-1">{children}</div>
+      <div className='ml-4 flex-1 px-1'>{children}</div>
     </div>
   );
 }

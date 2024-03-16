@@ -3,12 +3,12 @@
 import { Button } from '@/components/ui/button';
 import {
   leaderboardAddress,
+  lineaGoerli,
   thirdwebClient,
   tokenAddress,
 } from '@/lib/utils/config';
 import { useState } from 'react';
 import { prepareContractCall, prepareTransaction, toWei } from 'thirdweb';
-import { defineChain } from 'thirdweb/chains';
 import { getContract } from 'thirdweb/contract';
 import {
   MediaRenderer,
@@ -18,16 +18,6 @@ import {
   useSendTransaction,
 } from 'thirdweb/react';
 import { upload } from 'thirdweb/storage';
-
-const lineaChain = defineChain({
-  id: 59144,
-  rpc: 'https://linea.blockpi.network/v1/rpc/public',
-});
-
-const lineaGoerli = defineChain({
-  id: 59140,
-  rpc: 'https://rpc.goerli.linea.build',
-});
 
 export default function Home() {
   const [image, setImage] = useState<File | undefined>(undefined);
