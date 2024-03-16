@@ -7,19 +7,24 @@ import { prepareContractCall, toWei } from 'thirdweb';
 import { getContract } from 'thirdweb/contract';
 import { useActiveAccount, useSendTransaction } from 'thirdweb/react';
 import { Input } from '../ui/input';
+import { createStreamableUI, useUIState } from 'ai/rsc';
+import { useWaitForReceipt } from 'thirdweb/react';
+import { AI } from '@/app/actions/ai';
+import { SystemMessage } from '../llm-stocks';
+
+const contract = getContract({
+  client: thirdwebClient,
+  address: tokenAddress,
+  chain: lineaGoerli,
+});
 
 export function MintTokenComponent({ amount }: { amount: string }) {
   const activeAccount = useActiveAccount();
   const { mutate: sendTx, data: transactionHash } = useSendTransaction();
   const [currentAmount, setCurrentAmount] = useState(amount);
+  const [, setMessages] = useUIState<typeof AI>();
 
   const mintToken = async () => {
-    const contract = getContract({
-      client: thirdwebClient,
-      address: tokenAddress,
-      chain: lineaGoerli,
-    });
-
     const tx = prepareContractCall({
       contract,
       // pass the method signature that you want to call
@@ -37,26 +42,46 @@ export function MintTokenComponent({ amount }: { amount: string }) {
 
   useEffect(() => {
     if (transactionHash) {
-      const explorerLink = `https://explorer.goerli.linea.build/tx/${transactionHash}`;
+      const explorerLink = `https://explorer.goerli.linea.build/tx/${transactionHash.transactionHash}`;
+
+      setMessages((currentMessages) => [
+        ...currentMessages,
+        {
+          id: Date.now(),
+          display: (
+            <SystemMessage>
+              <a href={explorerLink} target='_blank' className='underline'>
+                Open Explorer
+              </a>
+            </SystemMessage>
+          ),
+        },
+      ]);
     }
   }, [transactionHash]);
 
   return (
     <>
-      <Input
-        value={currentAmount}
-        onChange={(e) => setCurrentAmount(e.target.value)}
-      />
-      <Button
-        onClick={() => {
-          mintToken();
-        }}
-      >
-        Mint Token
-      </Button>
-      {transactionHash && (
+      <div className='flex w-full items-center space-x-2'>
+        <Input
+          value={currentAmount}
+          type='number'
+          onChange={(e) => setCurrentAmount(e.target.value)}
+          className='flex w-full'
+        />
+        <Button
+          onClick={() => {
+            mintToken();
+          }}
+          disabled={+currentAmount <= 0}
+        >
+          Mint
+        </Button>
+      </div>
+
+      {/* {transactionHash && (
         <div>{`https://explorer.goerli.linea.build/tx/${transactionHash.transactionHash}`}</div>
-      )}
+      )} */}
     </>
   );
 }
