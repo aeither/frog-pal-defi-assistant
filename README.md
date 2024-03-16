@@ -26,17 +26,19 @@ Team Info
 
 invoke dynamic UI by voice.
 
-Intent-based UX: users express their desired outcomes or goals. AI determine and execute the necessary actions to achieve those intents
+Intent-based UX: users express their desired outcomes or goals. AI determine and execute the necessary actions to achieve those intents.
 
 # Tech Stack
 
-- NextJS 14. Generative UI leveraging React Server Components and Server Actions
-- Drizzle ORM
-- Neon DB
+- NextJS 14: Generative UI leveraging React Server Components and Server Actions
+- Drizzle ORM: Query DB
+- Neon DB: Contact List
+- Deepgram: Aura for tts, stt for voice input
+- Solidity: Leaderboard and Token contracts
 
 Linea Partners
 
-- Thirdweb
-- GoPlus
+- Thirdweb: Connect Wallet and Contract Interaction
+- GoPlus: Token contract safety check
 
 # Architecture
