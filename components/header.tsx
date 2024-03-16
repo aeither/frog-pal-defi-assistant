@@ -2,22 +2,8 @@
 
 import Link from 'next/link';
 
-import {
-  IconGitHub,
-  IconSeparator,
-  IconSparkles,
-  IconVercel,
-} from '@/components/ui/icons';
-import { Button } from '@/components/ui/button';
-// import { ConnectKitButton } from 'connectkit';
-import { ConnectButton, darkTheme } from 'thirdweb/react';
 import { ShellIcon } from 'lucide-react';
-
-const customTheme = darkTheme({
-  colors: {
-    modalBg: 'red',
-  },
-});
+import { ConnectButton, darkTheme } from 'thirdweb/react';
 
 export function Header() {
   return (
@@ -44,7 +30,6 @@ export function Header() {
               'opacity-100 hover:opacity-70  transition-all duration-300 p-2',
           }}
         />
-        {/* <ConnectKitButton /> */}
       </div>
     </header>
   );
