@@ -24,6 +24,8 @@ Team Info
 
 # Overview
 
+invoke dynamic UI by voice.
+
 Intent-based UX: users express their desired outcomes or goals. AI determine and execute the necessary actions to achieve those intents
 
 # Tech Stack
