@@ -31,6 +31,7 @@ import { ViewRecipentsComponent } from '@/components/contact-list/ViewRecipentsC
 import MintTokenComponent from '@/components/web3/MintTokenComponent';
 import UploadComponent from '@/components/web3/UploadComponent';
 import { checkTokenSecurity } from '../goplus';
+import LeaderboardList from '@/components/leaderboard/LeaderboardList';
 
 interface CoinGeckoResponse {
   [key: string]: {
@@ -72,6 +73,7 @@ Messages inside [] means that it's a UI element or a user event. For example:
 - "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
 - "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
 
+If the user requests gamified leaderboard list, call \`leaderboard_list\`.
 If the user requests smart contract token security check, call \`security_check\`.
 If the user requests upload image, call \`upload_ipfs\`.
 If the user requests mint tokens and provides the amount, call \`mint_token\`.
@@ -96,6 +98,12 @@ Besides that, you can also chat with users and do some calculations if needed.`,
     ],
 
     functions: [
+      {
+        name: 'leaderboard_list',
+        description:
+          'show leaderboard list to see points by address classification',
+        parameters: z.object({}),
+      },
       {
         name: 'security_check',
         description: 'check with go plus if token smart contract is secure',
@@ -255,6 +263,14 @@ Besides that, you can also chat with users and do some calculations if needed.`,
       reply.done();
       aiState.done([...aiState.get(), { role: 'assistant', content }]);
     }
+  });
+
+  completion.onFunctionCall('leaderboard_list', async () => {
+    reply.done(
+      <BotMessage>
+        <LeaderboardList />
+      </BotMessage>
+    );
   });
 
   completion.onFunctionCall(

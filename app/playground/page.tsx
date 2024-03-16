@@ -10,7 +10,6 @@ import {
   UserMessage,
 } from '@/components/llm-stocks/message';
 import PortfolioComponent from '@/components/portfolio/PortfolioComponent';
-import TokenList from '@/components/tokens/TokenComponent';
 import { TransactionList } from '@/components/transactions/TransactionList';
 import { Button } from '@/components/ui/button';
 import { IconPlus } from '@/components/ui/icons';
@@ -39,6 +38,7 @@ import {
   ZerionTransactionType,
   getTransactions,
 } from '../actions/zerion/transactions';
+import TokenList from '@/components/tokens/TokenComponent';
 
 const userMessage = (
   <UserMessage>
