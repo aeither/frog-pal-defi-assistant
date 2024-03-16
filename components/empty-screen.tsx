@@ -64,7 +64,7 @@ export function EmptyScreen({
                 onClick={() => setEditMode(!editMode)}
                 variant={'outline'}
               >
-                <Edit size={'sm'} />
+                <Edit size={'18px'} />
               </Button>
               <DialogAddButton addShortcut={handleAddShortcut} />
             </div>

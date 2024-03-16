@@ -65,8 +65,8 @@ Messages inside [] means that it's a UI element or a user event. For example:
 - "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
 - "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
 
-If the user requests to check connected wallet portfolio balance, call \`check_my_portfolio_balance\`.
-If the user requests portfolio balance by providing an address, call \`check_portfolio_by_address\`.
+If the user requests portfolio balance by providing an EVM address, call \`check_portfolio_by_address\`.
+If the user ask for his own portfolio balance call \`check_portfolio_by_address\` with the EVM address. EVM address starts with 0x...
 If the user requests add recipient, call \`add_recipient\`.
 If the user requests send coin to someone, call \`send_coin\`.
 If the user requests confetti button, call \`confetti_button\` to show button confetti.
@@ -85,7 +85,8 @@ Besides that, you can also chat with users and do some calculations if needed.`,
     functions: [
       {
         name: 'check_portfolio_by_address',
-        description: 'Check the portfolio balance',
+        description:
+          'Check the portfolio balance from provided address or the asker if wants to own',
         parameters: z.object({
           address: z.string(),
         }),
@@ -215,9 +216,9 @@ Besides that, you can also chat with users and do some calculations if needed.`,
     async ({ address }: { address: string }) => {
       const data = await getPortfolio(address);
       reply.done(
-        <BotMessage>
+        <BotCard>
           <PortfolioComponent portfolio={data.data} />
-        </BotMessage>
+        </BotCard>
       );
     }
   );

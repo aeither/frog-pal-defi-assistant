@@ -24,6 +24,7 @@ import { getAllUsers } from './actions/db';
 import dynamic from 'next/dynamic';
 import { ArrowUpIcon, MicIcon } from 'lucide-react';
 import VoiceButton from '@/components/voice/VoiceButton';
+import { useActiveAccount } from 'thirdweb/react';
 
 const BrowserOnlyEmptyScreen = dynamic(
   () => import('../components/empty-screen').then((mod) => mod.EmptyScreen),
@@ -31,6 +32,7 @@ const BrowserOnlyEmptyScreen = dynamic(
 );
 
 export default function Page() {
+  const account = useActiveAccount();
   const [messages, setMessages] = useUIState<typeof AI>();
   const { submitUserMessage } = useActions();
   const [inputValue, setInputValue] = useState('');
@@ -122,7 +124,10 @@ export default function Page() {
               ]);
 
               // Submit and get response message
-              const responseMessage = await submitUserMessage(message);
+              const responseMessage = await submitUserMessage(
+                message +
+                  `\n\n Metainfo: address of the user who is asking that may be useful: ${account?.address}`
+              );
               setMessages((currentMessages) => [
                 ...currentMessages,
                 responseMessage,
@@ -160,7 +165,10 @@ export default function Page() {
 
                 try {
                   // Submit and get response message
-                  const responseMessage = await submitUserMessage(value);
+                  const responseMessage = await submitUserMessage(
+                    value +
+                      `\n\n Metainfo: address of the user who is asking that may be useful: ${account?.address}`
+                  );
                   setMessages((currentMessages) => [
                     ...currentMessages,
                     responseMessage,
