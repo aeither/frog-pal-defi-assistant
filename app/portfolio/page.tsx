@@ -1,7 +1,7 @@
 'use client';
 
 import PortfolioComponent from '@/components/portfolio/PortfolioComponent';
-import TokenList from '@/components/tokens/TokenComponent';
+import { TokenList } from '@/components/tokens/TokenComponent';
 import Transaction from '@/components/transactions/Transaction';
 import Image from 'next/image';
 import { useState } from 'react';

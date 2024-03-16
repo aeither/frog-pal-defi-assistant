@@ -1,19 +1,16 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-
+import { ChatList } from '@/components/chat-list';
+import { FooterText } from '@/components/footer';
+import LeaderboardList from '@/components/leaderboard/LeaderboardList';
+import { Purchase } from '@/components/llm-stocks';
 import {
   BotCard,
   BotMessage,
   UserMessage,
 } from '@/components/llm-stocks/message';
-import { useActions, useUIState } from 'ai/rsc';
-
-import { ChatList } from '@/components/chat-list';
-import { FooterText } from '@/components/footer';
-import LeaderboardList from '@/components/leaderboard/LeaderboardList';
-import { Purchase } from '@/components/llm-stocks';
 import PortfolioComponent from '@/components/portfolio/PortfolioComponent';
+import { TransactionList } from '@/components/transactions/TransactionList';
 import { Button } from '@/components/ui/button';
 import { IconPlus } from '@/components/ui/icons';
 import {
@@ -26,16 +23,22 @@ import MintTokenComponent from '@/components/web3/MintTokenComponent';
 import UploadComponent from '@/components/web3/UploadComponent';
 import { ChatScrollAnchor } from '@/lib/hooks/chat-scroll-anchor';
 import { useEnterSubmit } from '@/lib/hooks/use-enter-submit';
+import { useActions, useUIState } from 'ai/rsc';
 import { ArrowUpIcon } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import Textarea from 'react-textarea-autosize';
 import { AI } from '../actions/ai';
-import { PortfolioType, getPortfolio } from '../actions/zerion';
-
-import { TransactionList } from '@/components/transactions/TransactionList';
+import {
+  PortfolioType,
+  TokenPosition,
+  getPortfolio,
+  getTokens,
+} from '../actions/zerion';
 import {
   ZerionTransactionType,
   getTransactions,
 } from '../actions/zerion/transactions';
+import TokenList from '@/components/tokens/TokenComponent';
 
 const userMessage = (
   <UserMessage>
@@ -114,13 +117,25 @@ const TransactionDisplayComponent = () => {
   return (
     <BotCard>
       {transactions && <TransactionList transactions={transactions} />}
-      {/* {transactions && (
-        <>
-          {transactions.map((tx, i) => (
-            <Transaction key={i} transaction={tx} />
-          ))}
-        </>
-      )}{' '} */}
+    </BotCard>
+  );
+};
+
+const TokenDisplayComponent = () => {
+  const [addressTokens, setAddressTokens] = useState<TokenPosition[]>();
+
+  const callGetTransactions = async () => {
+    const data = await getTokens('0x88c6C46EBf353A52Bdbab708c23D0c81dAA8134A');
+
+    setAddressTokens(data.data);
+  };
+  useEffect(() => {
+    callGetTransactions();
+  }, []);
+
+  return (
+    <BotCard>
+      {addressTokens && <TokenList positions={addressTokens} />}
     </BotCard>
   );
 };
@@ -151,8 +166,12 @@ export default function Page() {
       // },
       {
         id: Date.now(),
-        display: <TransactionDisplayComponent />,
+        display: <TokenDisplayComponent />,
       },
+      // {
+      //   id: Date.now(),
+      //   display: <TransactionDisplayComponent />,
+      // },
       // {
       //   id: Date.now(),
       //   display: <PortfolioDisplayComponent />,

@@ -6,13 +6,13 @@ interface TokenListProps {
   positions: TokenPosition[];
 }
 
-const TokenList: React.FC<TokenListProps> = ({ positions }) => {
+export const TokenList: React.FC<TokenListProps> = ({ positions }) => {
   const positionsWithImages = positions.filter(
     (position) => position.attributes.fungible_info.icon?.url
   );
 
   return (
-    <ul className='divide-y divide-gray-200'>
+    <ul className='w-full flex flex-col divide-y-2'>
       {positionsWithImages.map((position) => (
         <li
           key={position.id}
