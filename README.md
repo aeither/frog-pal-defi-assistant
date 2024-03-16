@@ -1,36 +1,25 @@
-name: Frog Pal
-
-short: Your Trusted DeFi Companion to navigate Linea.
-
-slides
-
-logo 480x480
-
-Vision
-
-Description
-
-Github repo URL
-
-project demo URL
-
-demo Video URL
-
-Team Info
-
 # Linea Gateway
 
-# Demo
+## Slides
 
-# Overview
+https://www.canva.com/design/DAF_s5BLudw/BJ6uHl8GQO_aRrzhe50G7A/edit?utm_content=DAF_s5BLudw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 
-invoke dynamic UI by voice.
+## Demo
 
-Intent-based UX: users express their desired outcomes or goals. AI determine and execute the necessary actions to achieve those intents.
+## Overview
 
-# Tech Stack
+Frog Pal is a defi companion that helps you to navigate Linea.
+
+It offers Intent-based UX: users express their desired outcomes or goals. AI determine and execute the necessary actions to achieve those intents.
+
+It leverages vercel generative UI to show the user only the relevant data and insights. It generate just the required UI for the user to performer the desired actions.
+
+## Tech Stack
+
+General
 
 - NextJS 14: Generative UI leveraging React Server Components and Server Actions
+- GPT4: For functions/tools calling
 - Drizzle ORM: Query DB
 - Neon DB: Contact List
 - Deepgram: Aura for tts, stt for voice input
@@ -41,7 +30,11 @@ Linea Partners
 - Thirdweb: Connect Wallet and Contract Interaction
 - GoPlus: Token contract safety check
 
-# Architecture
+## What Next
+
+- Integration with main protocols
+- Alerts
+- Ask for curated news and trends
 
 --
 
@@ -66,4 +59,3 @@ https://goerli.lineascan.build/tx/0x9ab1231a1eac0a1a8f82e16b43ae332eabac5ff70fe9
 ![Leaderboard](https://github.com/aeither/frog-pal-defi-assistant/assets/36173828/74086e58-52e1-4c50-a791-c20afb39d79a)
 
 ![custom dashboard](https://github.com/aeither/frog-pal-defi-assistant/assets/36173828/1483b325-e569-4b30-b48f-a792059efb3b)
-
