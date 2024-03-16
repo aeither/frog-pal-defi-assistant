@@ -15,7 +15,7 @@ const Transaction: React.FC<TransactionProps> = ({ transaction }) => {
       hash={attributes.hash}
       chain={relationships.chain.data.id}
       timestamp={attributes.mined_at}
-      value={attributes.transfers[0].value}
+      value={attributes.transfers[0] ? attributes.transfers[0].value : 0}
       fee={attributes.fee.value}
     />
   );

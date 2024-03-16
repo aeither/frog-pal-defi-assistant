@@ -13,8 +13,10 @@ const TransactionFee: React.FC<TransactionFeeProps> = ({ fee }) => {
         Token: {fee.fungible_info.name} ({fee.fungible_info.symbol})
       </p>
       <p className='text-sm mb-1'>Quantity: {fee.quantity.numeric}</p>
-      <p className='text-sm mb-1'>Price: ${fee.price.toFixed(2)}</p>
-      <p className='text-sm'>Value: ${fee.value.toFixed(2)}</p>
+      <p className='text-sm mb-1'>
+        Price: ${fee.price ? fee.price.toFixed(2) : 0}
+      </p>
+      <p className='text-sm'>Value: ${fee.value ? fee.value.toFixed(2) : 0}</p>
     </div>
   );
 };

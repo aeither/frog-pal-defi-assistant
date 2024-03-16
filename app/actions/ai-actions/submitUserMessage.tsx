@@ -22,8 +22,9 @@ import { createStreamableUI, getMutableAIState } from 'ai/rsc';
 import OpenAI from 'openai';
 import { z } from 'zod';
 import { AI } from '../ai';
-import { getPortfolio } from '../zerion';
+import { getPortfolio, getTransactions } from '../zerion';
 import PortfolioComponent from '@/components/portfolio/PortfolioComponent';
+import { TransactionList } from '@/components/transactions/TransactionList';
 
 interface CoinGeckoResponse {
   [key: string]: {
@@ -65,6 +66,7 @@ Messages inside [] means that it's a UI element or a user event. For example:
 - "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
 - "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
 
+If the user requests view historical transactions or txs by providing an EVM address, call \`check_transactions_by_address\`.
 If the user requests portfolio balance by providing an EVM address, call \`check_portfolio_by_address\`.
 If the user ask for his own portfolio balance call \`check_portfolio_by_address\` with the EVM address. EVM address starts with 0x...
 If the user requests add recipient, call \`add_recipient\`.
@@ -83,6 +85,14 @@ Besides that, you can also chat with users and do some calculations if needed.`,
     ],
 
     functions: [
+      {
+        name: 'check_transactions_by_address',
+        description:
+          'Check the transactions txs from provided address or use the asker address if wants to check own',
+        parameters: z.object({
+          address: z.string(),
+        }),
+      },
       {
         name: 'check_portfolio_by_address',
         description:
@@ -207,6 +217,18 @@ Besides that, you can also chat with users and do some calculations if needed.`,
         <BotMessage>
           <AddRecipientComponent name={name} recipient={recipient} />
         </BotMessage>
+      );
+    }
+  );
+
+  completion.onFunctionCall(
+    'check_transactions_by_address',
+    async ({ address }: { address: string }) => {
+      const data = await getTransactions(address);
+      reply.done(
+        <BotCard>
+          <TransactionList transactions={data.data} />
+        </BotCard>
       );
     }
   );
