@@ -69,16 +69,7 @@ const leaderboardList = (
   </BotCard>
 );
 
-const botMessage = (
-  <BotMessage>
-    id irure cillum labore veniam sint adipisicing. Culpa voluptate veniam anim
-    incididunt ad ex cillum id dolore veniam consequat amet elit dolore. In
-    consequat ullamco labore aliquip. Dolor aute exercitation aliqua incididunt
-    voluptate cupidatat reprehenderit. Velit mollit sit occaecat do duis eu
-    culpa proident. Ut tempor minim Lorem adipisicing et et voluptate eu elit
-    voluptate dolor incididunt magna. Consequat nisi sint elit est cillum.
-  </BotMessage>
-);
+const botMessage = <BotMessage>What is happening?</BotMessage>;
 
 export default function Page() {
   const [messages, setMessages] = useUIState<typeof AI>();
@@ -94,14 +85,14 @@ export default function Page() {
         id: Date.now(),
         display: userMessage,
       },
-      {
-        id: Date.now(),
-        display: uploadComponent,
-      },
       // {
       //   id: Date.now(),
-      //   display: botMessage,
+      //   display: uploadComponent,
       // },
+      {
+        id: Date.now(),
+        display: botMessage,
+      },
       // {
       //   id: Date.now(),
       //   display: mintTokenComponent,

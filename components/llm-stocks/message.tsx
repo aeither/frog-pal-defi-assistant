@@ -2,7 +2,9 @@
 
 import { IconAI, IconUser } from '@/components/ui/icons';
 import { cn } from '@/lib/utils';
-import { CircleEllipsisIcon, CopyIcon } from 'lucide-react';
+import { CircleEllipsisIcon, CopyIcon, Volume2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useNarrate } from '@/lib/hooks/use-narrate';
 
 // Different types of message bubbles.
 
@@ -29,6 +31,8 @@ export function BotMessage({
   children: React.ReactNode;
   className?: string;
 }) {
+  const { handleGenerateAudio } = useNarrate();
+
   return (
     <div
       className={cn(
@@ -40,8 +44,21 @@ export function BotMessage({
         <div className='flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow-sm bg-primary text-primary-foreground'>
           <IconAI />
         </div>
-        <div className='flex h-8 w-8 shrink-0 select-none items-center justify-center'>
-          <CopyIcon size={'18px'} className='opacity-70' />
+        <div className='flex'>
+          <div className='flex h-8 w-8 shrink-0 select-none items-center justify-center'>
+            <Button
+              onClick={() => handleGenerateAudio(children as string)}
+              variant={'ghost'}
+              className='rounded-full'
+            >
+              <Volume2 size={'18px'} className='opacity-70' />
+            </Button>
+          </div>
+          <div className='flex h-8 w-8 shrink-0 select-none items-center justify-center'>
+            <Button variant={'ghost'} className='rounded-full'>
+              <CopyIcon size={'18px'} className='opacity-70' />
+            </Button>
+          </div>
         </div>
       </div>
       <div className='flex-1 space-y-2 overflow-hidden px-1'>{children}</div>
