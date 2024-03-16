@@ -2,12 +2,16 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { BotCard, UserMessage } from '@/components/llm-stocks/message';
+import {
+  BotCard,
+  UserMessage,
+  BotMessage,
+} from '@/components/llm-stocks/message';
 import { useActions, useUIState } from 'ai/rsc';
 
 import { ChatList } from '@/components/chat-list';
 import { FooterText } from '@/components/footer';
-import { Stock } from '@/components/llm-stocks';
+import { Purchase, Stock } from '@/components/llm-stocks';
 import { Button } from '@/components/ui/button';
 import { IconPlus } from '@/components/ui/icons';
 import {
@@ -21,17 +25,45 @@ import { useEnterSubmit } from '@/lib/hooks/use-enter-submit';
 import { ArrowUpIcon } from 'lucide-react';
 import Textarea from 'react-textarea-autosize';
 import { AI } from '../actions/ai';
+import UploadComponent from '@/components/web3/UploadComponent';
 
-const one = (
+const userMessage = (
+  <UserMessage>
+    Minim deserunt incididunt commodo veniam. Cupidatat enim excepteur ut enim
+    velit esse veniam eiusmod officia amet. Veniam proident veniam tempor dolore
+    dolore dolor incididunt. Minim elit sit exercitation excepteur cupidatat
+    tempor magna qui elit anim. Cillum magna nulla commodo ad ut reprehenderit
+    excepteur amet commodo tempor consequat commodo tempor. Deserunt excepteur
+    id irure cillum labore veniam sint adipisicing. Culpa voluptate veniam anim
+    incididunt ad ex cillum id dolore veniam consequat amet elit dolore. In
+    consequat ullamco labore aliquip. Dolor aute exercitation aliqua incididunt
+    voluptate cupidatat reprehenderit. Velit mollit sit occaecat do duis eu
+    culpa proident. Ut tempor minim Lorem adipisicing et et voluptate eu elit
+    voluptate dolor incididunt magna. Consequat nisi sint elit est cillum.
+  </UserMessage>
+);
+
+const uploadComponent = (
   <BotCard>
-    <Stock name={'symbol'} price={123} />
+    <UploadComponent />
   </BotCard>
 );
 
-const two = (
+const purchaseComponent = (
   <BotCard>
-    <Stock name={'symbol'} price={321} />
+    <Purchase defaultAmount={10} name={'symbol'} price={+123} />
   </BotCard>
+);
+
+const botMessage = (
+  <BotMessage>
+    id irure cillum labore veniam sint adipisicing. Culpa voluptate veniam anim
+    incididunt ad ex cillum id dolore veniam consequat amet elit dolore. In
+    consequat ullamco labore aliquip. Dolor aute exercitation aliqua incididunt
+    voluptate cupidatat reprehenderit. Velit mollit sit occaecat do duis eu
+    culpa proident. Ut tempor minim Lorem adipisicing et et voluptate eu elit
+    voluptate dolor incididunt magna. Consequat nisi sint elit est cillum.
+  </BotMessage>
 );
 
 export default function Page() {
@@ -46,11 +78,19 @@ export default function Page() {
       ...currentMessages,
       {
         id: Date.now(),
-        display: one,
+        display: userMessage,
       },
       {
         id: Date.now(),
-        display: two,
+        display: uploadComponent,
+      },
+      {
+        id: Date.now(),
+        display: botMessage,
+      },
+      {
+        id: Date.now(),
+        display: purchaseComponent,
       },
     ]);
   }, []);
