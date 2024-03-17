@@ -8,6 +8,10 @@ https://www.canva.com/design/DAF_s5BLudw/BJ6uHl8GQO_aRrzhe50G7A/edit?utm_content
 
 ## Demo
 
+## Vision
+
+Frog Pal is an AI-driven companion that understand user intent and generate personalized interfaces making interaction with DeFi easy and intuitive.
+
 ## Overview
 
 Frog Pal is a DeFi companion that helps you navigate Linea, offering an intent-based user experience where users express their desired outcomes or goals, and AI determines and executes the necessary actions to achieve those intents.
